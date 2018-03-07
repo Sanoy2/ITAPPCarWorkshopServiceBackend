@@ -28,6 +28,23 @@ namespace ITAPP_CarWorkshopService.Controllers
             return list;
         }
 
+        [HttpPost]
+        public void Post(string carBrand)
+        {
+            /* TODO:
+             * 1) check if this function work
+             * 2) move function to model class
+             * */
+            
+            var db = new ITAPPCarWorkshopServiceDBEntities();
 
+            Car_Brands newCarBrand = new Car_Brands()
+            {
+                Brand_Name = carBrand
+            };
+
+            db.Car_Brands.Add(newCarBrand);
+            db.SaveChanges();
+        }
     }
 }

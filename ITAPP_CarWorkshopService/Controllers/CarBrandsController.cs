@@ -24,8 +24,25 @@ namespace ITAPP_CarWorkshopService.Controllers
             {
                 list.Add(carBrand.Brand_Name);
             }
-
             return list;
+        }
+
+        [HttpPut]
+        public IHttpActionResult Put(string Brand_Name)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            var Car_Brand = db.Car_Brands.FirstOrDefault((p) => p.Brand_Name == Brand_Name);
+            if(Car_Brand == null)
+            {
+                var newCarBrand = new Car_Brands() { Brand_ID = db.Car_Brands.Last().Brand_ID + 1 , Brand_Name = Brand_Name };
+                db.Car_Brands.Add(newCarBrand);
+                db.SaveChanges();
+            }
+            else
+            {
+                return BadRequest("This Car_Brand exsist ID: " + Car_Brand.Brand_ID + " Name: " + Car_Brand.Brand_Name);
+            }
+            return Ok();
         }
 
         [HttpPost]
@@ -36,7 +53,7 @@ namespace ITAPP_CarWorkshopService.Controllers
              * 2) move function to model class
              * */
 
-            return carBrand;
+            return "It Works!";
         }
     }
 }

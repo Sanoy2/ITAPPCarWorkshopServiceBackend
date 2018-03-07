@@ -29,14 +29,14 @@ namespace ITAPP_CarWorkshopService.Controllers
         }
 
         [HttpPost]
-        public string Post(string carBrand)
+        public string Post([FromBody]string carBrand)
         {
             /* TODO:
              * 1) check if this function work
              * 2) move function to model class
              * */
 
-            return "It works!";
+            return "It works! You typed: " + carBrand;
         }
     }
 }

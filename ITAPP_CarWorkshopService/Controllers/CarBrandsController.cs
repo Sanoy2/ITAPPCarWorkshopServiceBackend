@@ -12,7 +12,7 @@ namespace ITAPP_CarWorkshopService.Controllers
 
 
         // GET api/values/5
-        public List<string> Get()
+        public List<string> Get_All_Of_Brands()
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
             
@@ -27,33 +27,25 @@ namespace ITAPP_CarWorkshopService.Controllers
             return list;
         }
 
-        [HttpPut]
-        public IHttpActionResult Put(string Brand_Name)
+        [HttpPost]
+        public string Add_New_Brand([FromBody] Car_Brands New_Brand)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            var Car_Brand = db.Car_Brands.FirstOrDefault((p) => p.Brand_Name == Brand_Name);
-            if(Car_Brand == null)
+            foreach (var Car in db.Car_Brands)
             {
-                var newCarBrand = new Car_Brands() { Brand_ID = db.Car_Brands.Last().Brand_ID + 1 , Brand_Name = Brand_Name };
-                db.Car_Brands.Add(newCarBrand);
-                db.SaveChanges();
+                if (New_Brand.Brand_Name.ToLower() == Car.Brand_Name.ToLower())
+                {
+                    return "Car is exsisting";
+                }
             }
-            else
+            var newBrand = new Car_Brands()
             {
-                return BadRequest("This Car_Brand exsist ID: " + Car_Brand.Brand_ID + " Name: " + Car_Brand.Brand_Name);
-            }
-            return Ok();
-        }
-
-        [HttpPost]
-        public string Post([FromBody]string carBrand)
-        {
-            /* TODO:
-             * 1) check if this function work
-             * 2) move function to model class
-             * */
-
-            return "It works! You typed: " + carBrand;
+                Brand_Name = New_Brand.Brand_Name.ToLower()
+            };
+            newBrand.Brand_Name = newBrand.Brand_Name.Replace(newBrand.Brand_Name[0], newBrand.Brand_Name[0].ToString().ToUpper().ToCharArray()[0]);
+            db.Car_Brands.Add(newBrand);
+            db.SaveChanges();
+            return "Car was added";
         }
     }
 }

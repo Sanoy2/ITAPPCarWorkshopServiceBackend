@@ -12,11 +12,15 @@ namespace ITAPP_CarWorkshopService.Controllers
 
 
         // GET api/values/5
-        public Car_Brands Get(int id)
+        public List<Car_Brands> Get()
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
-
-            return db.Car_Brands.FirstOrDefault((p) => p.Brand_ID == id);
+            var List = new List<Car_Brands>();
+            foreach (var car in db.Car_Brands)
+            {
+                List.Add(car);
+            }
+            return List;
         }
 
 

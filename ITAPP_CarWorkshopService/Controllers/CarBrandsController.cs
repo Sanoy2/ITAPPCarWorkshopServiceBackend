@@ -36,7 +36,7 @@ namespace ITAPP_CarWorkshopService.Controllers
              * 2) move function to model class
              * */
 
-            return "It works!";
+            return carBrand;
         }
     }
 }

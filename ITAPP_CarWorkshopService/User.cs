@@ -19,7 +19,6 @@ namespace ITAPP_CarWorkshopService
         {
             this.Workshop_Employees = new HashSet<Workshop_Employees>();
         }
-    
         public int User_ID { get; set; }
         public string User_email { get; set; }
         public string User_password { get; set; }

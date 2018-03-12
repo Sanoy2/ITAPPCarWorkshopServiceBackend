@@ -199,9 +199,10 @@
     <Compile Include="Client_Profiles.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
-    <Compile Include="Controllers\CarBrands2Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\CarBrandsController.cs" />
+    <Compile Include="Controllers\CarBrands\CarBrandsController.cs" />
+    <Compile Include="Controllers\UserControllers\ClientController.cs" />
+    <Compile Include="Controllers\UserControllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>
@@ -209,6 +210,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpfukl_classes\Helpfull_Class.cs" />
     <Compile Include="Models.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -347,7 +349,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>51787</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

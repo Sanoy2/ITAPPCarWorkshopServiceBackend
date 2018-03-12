@@ -1,5 +1,4 @@
-﻿using ITAPP_CarWorkshopService.Helpfukl_classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,19 +10,19 @@ namespace ITAPP_CarWorkshopService.Controllers
     public class CarBrandsController : ApiController
     {
         [HttpDelete]
-        public IHttpActionResult Delete_Car_Brand(IntClass ID_Brand)
+        public string Delete_Car_Brand(int ID_Brand)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                var car = db.Car_Brands.FirstOrDefault(p => p.Brand_ID == ID_Brand.tmp);
+                var car = db.Car_Brands.FirstOrDefault(p => p.Brand_ID == ID_Brand);
                 if(car != null)
                 {
                     db.Car_Brands.Remove(car);
                     db.SaveChanges();
-                    return Ok("car removed");
+                    return "car removed";
                 }
             }
-            return Ok("There is no such car brand");
+            return "There is no such car brand";
         }
 
         // GET api/values/5
@@ -31,27 +30,25 @@ namespace ITAPP_CarWorkshopService.Controllers
         public List<Car_Brands> Get_All_Of_Brands()
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            
-            List<Car_Brands> list = new List<Car_Brands>();
+            return db.Car_Brands.ToList();
+        }
 
-            var carBrands = db.Car_Brands;
-
-            foreach (var carBrand in carBrands)
-            {
-                list.Add(carBrand);
-            }
-            return list;
+        [HttpGet]
+        public Car_Brands Get_Brand(int ID)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            return db.Car_Brands.FirstOrDefault(Brand => Brand.Brand_ID == ID);
         }
 
         [HttpPost]
-        public IHttpActionResult Add_New_Brand([FromBody] Car_Brands New_Brand)
+        public string Add_New_Brand([FromBody] Car_Brands New_Brand)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
             foreach (var Car in db.Car_Brands)
             {
                 if (New_Brand.Brand_Name.ToLower() == Car.Brand_Name.ToLower())
                 {
-                    return Ok($"Car is exisiting : {Car.Brand_ID} , {Car.Brand_Name} , {Car.Car_Profiles} , {Car.Workshop_Brand_Connections}");
+                    return $"Car is exisiting : {Car.Brand_ID} , {Car.Brand_Name} , {Car.Car_Profiles} , {Car.Workshop_Brand_Connections}";
                 }
             }
             var newBrand = new Car_Brands()
@@ -61,7 +58,7 @@ namespace ITAPP_CarWorkshopService.Controllers
             newBrand.Brand_Name = newBrand.Brand_Name.Replace(newBrand.Brand_Name[0], newBrand.Brand_Name[0].ToString().ToUpper().ToCharArray()[0]);
             db.Car_Brands.Add(newBrand);
             db.SaveChanges();
-            return Ok("Car was added");
+            return "Car was added";
         }
     }
 }

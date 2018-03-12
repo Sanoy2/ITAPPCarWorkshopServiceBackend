@@ -4,66 +4,70 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using ITAPP_CarWorkshopService.Helpfukl_classes;
 using System.Threading.Tasks;
+using ITAPP_CarWorkshopService.ResonseClass;
 
 namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 {
     public class UserController : ApiController
     {
         [HttpPost]
-        public async Task<string> Add_User([FromBody] User New_User)
+        public Response_String Add_User([FromBody] User New_User)
         {
+            var Response = new Response_String(){ Response = "User exists"};
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                User User = null;
-                User = db.Users.FirstOrDefault(user => user.User_email == User.User_email);
-                if (User == null)
+                var User = db.Users.FirstOrDefault(user => user.User_email == New_User.User_email);
+                if (User != null)
                 {
-                    User = new User()
-                    {
-                        User_email = User.User_email,
-                        User_ID = User.User_ID,
-                        User_password = User.User_password,
-                        Workshop_Employees = User.Workshop_Employees
-                    };
-                    db.Users.Add(User);
-                    await db.SaveChangesAsync();
-                    return $"New user was created {User.User_email} , {User.User_ID}";
+                    return Response;
                 }
+                 User = new User()
+                {
+                    User_email = New_User.User_email,
+                    User_ID = New_User.User_ID,
+                    User_password = New_User.User_password,
+                    Workshop_Employees = New_User.Workshop_Employees
+                };
+                db.Users.Add(User);
+                db.SaveChanges();
+                Response.Response= $"New user was created {User.User_email} , {User.User_ID}";
+                return Response;
             }
-            return "User exists";
         }
         [HttpGet]
         public User Get_User(int ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                var User = db.Users.FirstOrDefault(p => p.User_ID == ID);
-                if (User != null)
-                {
-                    return User;
-                }
-            }
-            return new User() {  User_email = "User does not exist's" };
+            return db.Users.FirstOrDefault(p => p.User_ID == ID);
         }
+
+        [HttpGet]
+        public List<User> Get_All_User()
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            return db.Users.ToList();
+        }
+
         [HttpPut]
-        public async Task<string> Update_User([FromBody]User User)
+        public Response_String Update_User([FromBody]User User)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
+                var Response = new Response_String() { Response = "User modified" };
                 var user = db.Users.Remove(db.Users.FirstOrDefault(p => p.User_ID == User.User_ID));
                 if(user != null)
                 {
                     db.Users.Add(User);
-                    await db.SaveChangesAsync();
-                    return "User modified";   
+                    db.SaveChangesAsync();
+                    return Response;   
                 }
+                Response.Response = "User undefined";
+                return Response;
             }
-            return "There is no such User";
         }
         [HttpDelete]
-        public async Task<string> Delete_User(int ID)
+        public Response_String Delete_User(int ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
@@ -71,10 +75,10 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 if(User != null)
                 {
                     db.Users.Remove(User);
-                    await db.SaveChangesAsync();
-                    return "User Deleted";
+                    db.SaveChangesAsync();
+                    return new Response_String(){Response = "User Deleted"};
                 }
-                return "User with id was not on the list";
+                return new Response_String() { Response = "User with id was not on the list" };
             }
         }
     }

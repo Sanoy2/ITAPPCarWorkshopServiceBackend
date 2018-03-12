@@ -31,7 +31,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         public User Get_User(int ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            return db.Users.FirstOrDefault(p => p.User_ID == ID);
+                return db.Users.FirstOrDefault(p => p.User_ID == ID);
         }
 
         [HttpGet]
@@ -62,11 +62,11 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 var User = db.Users.FirstOrDefault(user => user.User_ID == ID);
-                if(User != null)
+                if (User != null)
                 {
                     db.Users.Remove(User);
                     db.SaveChangesAsync();
-                    return new Response_String(){Response = "User Deleted"};
+                    return new Response_String() { Response = "User Deleted" };
                 }
                 return new Response_String() { Response = "User with id was not on the list" };
             }

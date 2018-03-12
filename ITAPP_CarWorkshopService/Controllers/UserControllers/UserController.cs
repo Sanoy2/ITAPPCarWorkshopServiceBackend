@@ -14,25 +14,17 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         [HttpPost]
         public Response_String Add_User([FromBody] User New_User)
         {
-            var Response = new Response_String(){ Response = "User exists"};
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 var User = db.Users.FirstOrDefault(user => user.User_email == New_User.User_email);
                 if (User != null)
                 {
-                    return Response;
+                    return new Response_String() { Response = "User Added" };
                 }
-                 User = new User()
-                {
-                    User_email = New_User.User_email,
-                    User_ID = New_User.User_ID,
-                    User_password = New_User.User_password,
-                    Workshop_Employees = New_User.Workshop_Employees
-                };
-                db.Users.Add(User);
+                db.Users.Add(New_User);
                 db.SaveChanges();
-                Response.Response= $"New user was created {User.User_email} , {User.User_ID}";
-                return Response;
+              ;
+                return new Response_String() { Response = $"New user was created {User.User_email} , {User.User_ID}" };
             }
         }
         [HttpGet]
@@ -54,16 +46,14 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                var Response = new Response_String() { Response = "User modified" };
                 var user = db.Users.Remove(db.Users.FirstOrDefault(p => p.User_ID == User.User_ID));
-                if(user != null)
+                if (user != null)
                 {
                     db.Users.Add(User);
                     db.SaveChangesAsync();
-                    return Response;   
+                    return new Response_String() { Response = "User modified" }; ;
                 }
-                Response.Response = "User undefined";
-                return Response;
+                return new Response_String() { Response = "User undefined" }; ;
             }
         }
         [HttpDelete]

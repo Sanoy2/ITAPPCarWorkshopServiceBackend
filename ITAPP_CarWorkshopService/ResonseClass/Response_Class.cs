@@ -5,8 +5,8 @@ using System.Web;
 
 namespace ITAPP_CarWorkshopService.ResonseClass
 {
-    public class Response_String
+    public partial class Response_String
     {
-       public string Response { get { return Response; } set { Response = value; } }
+        public string Response { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         [HttpPost]
         public Response_String Add_User([FromBody] User New_User)
         {
-            var Response = new Response_String(){ Response = "User exists"};
+            var Response = new Response_String() { Response = "User exists" };
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 var User = db.Users.FirstOrDefault(user => user.User_email == New_User.User_email);
@@ -22,7 +22,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 {
                     return Response;
                 }
-                 User = new User()
+                User = new User()
                 {
                     User_email = New_User.User_email,
                     User_ID = New_User.User_ID,
@@ -31,7 +31,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 };
                 db.Users.Add(User);
                 db.SaveChanges();
-                Response.Response= $"New user was created {User.User_email} , {User.User_ID}";
+                Response.Response = $"New user was created {User.User_email} , {User.User_ID}";
                 return Response;
             }
         }
@@ -39,7 +39,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         public User Get_User(int ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            return db.Users.FirstOrDefault(p => p.User_ID == ID);
+                return db.Users.FirstOrDefault(p => p.User_ID == ID);
         }
 
         [HttpGet]
@@ -56,11 +56,11 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             {
                 var Response = new Response_String() { Response = "User modified" };
                 var user = db.Users.Remove(db.Users.FirstOrDefault(p => p.User_ID == User.User_ID));
-                if(user != null)
+                if (user != null)
                 {
                     db.Users.Add(User);
                     db.SaveChangesAsync();
-                    return Response;   
+                    return Response;
                 }
                 Response.Response = "User undefined";
                 return Response;
@@ -72,11 +72,11 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 var User = db.Users.FirstOrDefault(user => user.User_ID == ID);
-                if(User != null)
+                if (User != null)
                 {
                     db.Users.Remove(User);
                     db.SaveChangesAsync();
-                    return new Response_String(){Response = "User Deleted"};
+                    return new Response_String() { Response = "User Deleted" };
                 }
                 return new Response_String() { Response = "User with id was not on the list" };
             }

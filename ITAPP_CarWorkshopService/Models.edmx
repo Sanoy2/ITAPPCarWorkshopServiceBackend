@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ITAPPCarWorkshopServiceDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ITAPPCarWorkshopServiceDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Car_Brands">
           <Key>
             <PropertyRef Name="Brand_ID" />
@@ -51,6 +51,7 @@
           <Property Name="Client_name" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Client_surname" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Client_phone_number" Type="varchar" MaxLength="12" />
+          <Property Name="User_ID" Type="int" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -202,6 +203,18 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Client_Pr__User___208CD6FA">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Client_Profiles" Type="Self.Client_Profiles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="Client_Profiles">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Workshop___Car_b__123EB7A3">
           <End Role="Car_Brands" Type="Self.Car_Brands" Multiplicity="0..1" />
           <End Role="Workshop_Brand_Connections" Type="Self.Workshop_Brand_Connections" Multiplicity="*" />
@@ -328,6 +341,10 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             <End Role="Client_Profiles" EntitySet="Client_Profiles" />
             <End Role="Cars_followed" EntitySet="Cars_followed" />
           </AssociationSet>
+          <AssociationSet Name="FK__Client_Pr__User___208CD6FA" Association="Self.FK__Client_Pr__User___208CD6FA">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Client_Profiles" EntitySet="Client_Profiles" />
+          </AssociationSet>
           <AssociationSet Name="FK__Workshop___Car_b__123EB7A3" Association="Self.FK__Workshop___Car_b__123EB7A3">
             <End Role="Car_Brands" EntitySet="Car_Brands" />
             <End Role="Workshop_Brand_Connections" EntitySet="Workshop_Brand_Connections" />
@@ -357,8 +374,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             <End Role="Workshop_Opening_Hours" EntitySet="Workshop_Opening_Hours" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ITAPPCarWorkshopServiceDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -419,6 +435,8 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <Property Name="Client_phone_number" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Cars_followed" Relationship="Self.FK__Cars_foll__Clien__7C4F7684" FromRole="Client_Profiles" ToRole="Cars_followed" />
           <NavigationProperty Name="Workshop_Comments" Relationship="Self.FK__Workshop___Clien__0A9D95DB" FromRole="Client_Profiles" ToRole="Workshop_Comments" />
+          <Property Name="User_ID" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" FromRole="Client_Profiles" ToRole="User" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -428,6 +446,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <Property Name="User_email" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="User_password" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Workshop_Employees" Relationship="Self.FK__Workshop___User___02084FDA" FromRole="Users" ToRole="Workshop_Employees" />
+          <NavigationProperty Name="Client_Profiles" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" FromRole="User" ToRole="Client_Profiles" />
         </EntityType>
         <EntityType Name="Workshop_Brand_Connections">
           <Key>
@@ -726,7 +745,23 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             <End Role="Workshop_Profiles" EntitySet="Workshop_Profiles" />
             <End Role="Workshop_Opening_Hours" EntitySet="Workshop_Opening_Hours" />
           </AssociationSet>
+          <AssociationSet Name="FK__Client_Pr__User___208CD6FA" Association="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Client_Profiles" EntitySet="Client_Profiles" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK__Client_Pr__User___208CD6FA">
+          <End Type="ITAPPCarWorkshopServiceDBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ITAPPCarWorkshopServiceDBModel.Client_Profiles" Role="Client_Profiles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="Client_Profiles">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -778,6 +813,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <EntitySetMapping Name="Client_Profiles">
             <EntityTypeMapping TypeName="ITAPPCarWorkshopServiceDBModel.Client_Profiles">
               <MappingFragment StoreEntitySet="Client_Profiles">
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
                 <ScalarProperty Name="Client_ID" ColumnName="Client_ID" />
                 <ScalarProperty Name="Client_name" ColumnName="Client_name" />
                 <ScalarProperty Name="Client_surname" ColumnName="Client_surname" />

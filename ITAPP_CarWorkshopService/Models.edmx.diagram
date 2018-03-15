@@ -29,6 +29,7 @@
         <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__09A971A2" ManuallyRouted="false" />
         <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__02FC7413" ManuallyRouted="false" />
         <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__151B244E" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -18,6 +18,7 @@ namespace ITAPP_CarWorkshopService
         public User()
         {
             this.Workshop_Employees = new HashSet<Workshop_Employees>();
+            this.Client_Profiles = new HashSet<Client_Profiles>();
         }
     
         public int User_ID { get; set; }
@@ -26,5 +27,7 @@ namespace ITAPP_CarWorkshopService
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Workshop_Employees> Workshop_Employees { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Client_Profiles> Client_Profiles { get; set; }
     }
 }

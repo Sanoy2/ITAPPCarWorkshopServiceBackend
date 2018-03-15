@@ -25,10 +25,12 @@ namespace ITAPP_CarWorkshopService
         public string Client_name { get; set; }
         public string Client_surname { get; set; }
         public string Client_phone_number { get; set; }
+        public Nullable<int> User_ID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Cars_followed> Cars_followed { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Workshop_Comments> Workshop_Comments { get; set; }
+        public virtual User User { get; set; }
     }
 }

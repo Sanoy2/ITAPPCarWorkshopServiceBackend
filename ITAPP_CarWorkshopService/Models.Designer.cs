@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'D:\ITAPP\ITAPP_CarWorkshopService\ITAPP_CarWorkshopService\Models.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Programowanie\ITAPP\ITAPPCarWorkshopServiceBackend\ITAPP_CarWorkshopService\Models.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

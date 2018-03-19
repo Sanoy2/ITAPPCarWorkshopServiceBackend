@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b2427a2e16ea4127b92dbe7bc84b2ed2" Name="Diagram1">
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Car_Brands" Width="1.5" PointX="1.5" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Car_Profiles" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Car_Services" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Cars_followed" Width="1.5" PointX="6" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Client_Profiles" Width="1.5" PointX="3.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.User" Width="1.5" PointX="3.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Workshop_Brand_Connections" Width="1.5" PointX="6" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Workshop_Comments" Width="1.5" PointX="6" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Workshop_Employees" Width="1.5" PointX="6" PointY="12.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Workshop_Opening_Hours" Width="1.5" PointX="3" PointY="20.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Workshop_Profiles" Width="1.5" PointX="0.75" PointY="8.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.database_firewall_rules" Width="1.5" PointX="8.75" PointY="1.5" IsExpanded="true" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Car_Profi__Brand__787EE5A0" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Car_b__123EB7A3" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Car_Servi__Car_I__0E6E26BF" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Cars_foll__Car_p__7B5B524B" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Car_Servi__Works__0D7A0286" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Cars_foll__Clien__7C4F7684" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Clien__0A9D95DB" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___User___02084FDA" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__114A936A" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__09A971A2" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__02FC7413" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__151B244E" ManuallyRouted="false" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

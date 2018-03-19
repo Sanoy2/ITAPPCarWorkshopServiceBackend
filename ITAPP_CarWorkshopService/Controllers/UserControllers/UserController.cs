@@ -46,7 +46,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                var user = db.Users.Remove(db.Users.FirstOrDefault(p => p.User_ID == User.User_ID));
+                var user = db.Users.FirstOrDefault(p => p.User_ID == User.User_ID);
                 var User_Mail_Repeted = db.Users.Find(db.Users.FirstOrDefault(p => p.User_email == User.User_email)) != null ? true : false;
                 if (User_Mail_Repeted)
                 {
@@ -54,7 +54,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 }
                 if (user != null)
                 {
-                    db.Users.Add(User);
+                    var ID = user.User_ID;
+                    user = User;
+                    user.User_ID = ID;
                     db.SaveChangesAsync();
                     return new Response_String() { Response = "User modified" }; ;
                 }

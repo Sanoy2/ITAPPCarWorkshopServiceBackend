@@ -49,7 +49,9 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarProflie
                 var OldCar = db.Car_Profiles.FirstOrDefault(car => car.Car_VIN_number == Modifi_car.Car_VIN_number);
                 if (OldCar != null)
                 {
-                    db.Car_Profiles.Add(OldCar);
+                    var ID = OldCar.Car_ID;
+                    OldCar = Modifi_car;
+                    OldCar.Car_ID = ID;
                     db.SaveChangesAsync();
                     return new Response_String() { Response = "Client added to a database" };
                 }

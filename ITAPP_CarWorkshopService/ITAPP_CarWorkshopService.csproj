@@ -203,10 +203,16 @@
     </Compile>
     <Compile Include="Controllers\Car\CarProflie\CarProfileController.cs" />
     <Compile Include="Controllers\Car\CarService\CarSerivceController.cs" />
+    <Compile Include="Controllers\Car\CarsFollowed\CarsFollowedController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Car\CarBrands\CarBrandsController.cs" />
     <Compile Include="Controllers\UserControllers\ClientProfileController.cs" />
     <Compile Include="Controllers\UserControllers\UserController.cs" />
+    <Compile Include="Controllers\UserControllers\WorkshopBrandConnections\WorkshopBrandConnectionController.cs" />
+    <Compile Include="Controllers\UserControllers\WorkshopComments\WorkshopCommentsController.cs" />
+    <Compile Include="Controllers\UserControllers\WorkshopEmployees\WorkshopEmployeesController.cs" />
+    <Compile Include="Controllers\UserControllers\WorkshopOpeningHour\WorkshopOpeningHoursController.cs" />
+    <Compile Include="Controllers\UserControllers\WorkshopProfiles\WorkshopProfilesController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>

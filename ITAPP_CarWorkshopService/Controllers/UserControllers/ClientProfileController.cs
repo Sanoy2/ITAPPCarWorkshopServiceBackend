@@ -51,10 +51,12 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 {
                     return new Response_String() { Response = "Client with that data already exists" };
                 }
-                var OldClient = db.Client_Profiles.Remove(db.Client_Profiles.FirstOrDefault(client => client.Client_ID == Modifi_client.Client_ID));
+                var OldClient = db.Client_Profiles.FirstOrDefault(client => client.Client_ID == Modifi_client.Client_ID);
                 if (OldClient != null)
                 {
-                    db.Client_Profiles.Add(Modifi_client);
+                    var ID = OldClient.Client_ID;
+                    OldClient = Modifi_client;
+                    OldClient.Client_ID = ID;
                     db.SaveChangesAsync();
                     return new Response_String() { Response = "Client added to a database" };
                 }

@@ -25,6 +25,15 @@ namespace ITAPP_CarWorkshopService.Authorization
                     validKey = true;
                 }
             }
+
+            if(!validKey)
+            {
+                return httpRequestMessage.CreateResponse(HttpStatusCode.Forbidden, "Invalid Access Token");
+            }
+
+            var response = await base.SendAsync(httpRequestMessage, cancellationToken);
+
+            return response; 
         }
     }
 }

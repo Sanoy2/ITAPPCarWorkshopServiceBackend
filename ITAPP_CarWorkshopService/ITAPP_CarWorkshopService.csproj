@@ -203,6 +203,7 @@
     <Compile Include="Controllers\CarBrands2Controller.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CarBrandsController.cs" />
+    <Compile Include="Controllers\tempController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>
@@ -300,7 +301,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

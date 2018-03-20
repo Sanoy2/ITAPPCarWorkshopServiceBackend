@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
+using ITAPP_CarWorkshopService.Authorization;
 
 namespace ITAPP_CarWorkshopService
 {
@@ -22,6 +23,16 @@ namespace ITAPP_CarWorkshopService
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            /*
+            config.Routes.MapHttpRoute(
+                name: "AuthorizeRoute",
+                routeTemplate: "apiP/{controller}/{id}",
+                defaults: new { id = RouteParameter.Optional },
+                constraints: null,
+                handler: new TokenMessageHandler()
+            );
+            */
+
         }
     }
 }

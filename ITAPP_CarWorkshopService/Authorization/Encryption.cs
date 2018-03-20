@@ -10,7 +10,9 @@ namespace ITAPP_CarWorkshopService.Authorization
 {
     public class Encryption
     {
-        static TripleDES CreateDES(string key)
+        private const string _password = "TheMostSophisticatedKeyYouveEverSeen123";
+
+        private static TripleDES CreateDES(string key)
         {
             MD5 md5 = new MD5CryptoServiceProvider();
             TripleDES tripleDES = new TripleDESCryptoServiceProvider();
@@ -19,7 +21,7 @@ namespace ITAPP_CarWorkshopService.Authorization
             return tripleDES;
         }
 
-        public string Encrypt(string text, string password)
+        public string Encrypt(string text, string password = _password)
         {
             byte[] textBytes = Encoding.Unicode.GetBytes(text);
 
@@ -35,7 +37,7 @@ namespace ITAPP_CarWorkshopService.Authorization
             return Convert.ToBase64String(memoryStream.ToArray());
         }
 
-        public string Decrypt(string text, string password)
+        public string Decrypt(string text, string password = _password)
         {
             byte[] textBytes = Convert.FromBase64String(text);
 

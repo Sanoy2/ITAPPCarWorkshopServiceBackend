@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.Authorization;
+using System.Net.Http;
+using System.Web.Http.Dispatcher;
 
 namespace ITAPP_CarWorkshopService
 {
@@ -23,16 +25,24 @@ namespace ITAPP_CarWorkshopService
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-            /*
+
+            // List of delegating handlers.
+            DelegatingHandler[] handlers = new DelegatingHandler[]
+            {
+                new TokenMessageHandler()
+            };
+
+            // Create a message handler chain with an end-point.
+            var routeHandlers = HttpClientFactory.CreatePipeline(
+                new HttpControllerDispatcher(config), handlers);
+
             config.Routes.MapHttpRoute(
                 name: "AuthorizeRoute",
-                routeTemplate: "apiP/{controller}/{id}",
+                routeTemplate: "protected/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional },
                 constraints: null,
-                handler: new TokenMessageHandler()
+                handler: routeHandlers
             );
-            */
-
         }
     }
 }

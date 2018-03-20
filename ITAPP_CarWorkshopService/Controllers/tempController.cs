@@ -10,6 +10,7 @@ namespace ITAPP_CarWorkshopService.Controllers
     public class tempController : ApiController
     {
         [HttpGet]
+        [Route("protected/temp")]
         public string Get()
         {
             return "It Works!";

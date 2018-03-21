@@ -60,7 +60,7 @@ namespace ITAPP_CarWorkshopService.Authorization
                 }
                 else
                 {
-                    RemoveExpiredToken(token);
+                    RemoveToken(token);
                 }
             }
 
@@ -100,9 +100,14 @@ namespace ITAPP_CarWorkshopService.Authorization
             }
         }
 
-        private static void RemoveExpiredToken(Token token)
+        private static void RemoveToken(Token token)
         {
-            listOfTokens.Remove(token);
+            RemoveToken(token.TokenString);
+        }
+
+        private static void RemoveToken(string tokenString)
+        {
+            listOfTokens.RemoveAll(n => n.TokenString.Equals(tokenString));
         }
 
         private static void RemoveExpiredAllTokens()
@@ -121,5 +126,16 @@ namespace ITAPP_CarWorkshopService.Authorization
         {
             return DateTime.Now.AddMinutes(timeOfExpirationMinutes).AddHours(timeOfExpirationHours).AddDays(timeOfExpirationDays);
         }
+
+        public static void Logout(Token token)
+        {
+            Logout(token.TokenString);
+        }
+
+        public static void Logout(string tokenString)
+        {
+            RemoveToken(tokenString);
+        }
+
     }
 }

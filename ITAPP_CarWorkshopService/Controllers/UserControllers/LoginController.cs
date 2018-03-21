@@ -23,7 +23,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             }
             catch(Exception e)
             {
-                return new List<string>();
+                var result = new List<string>();
+                result.Add("Token is missing in header");
+                return result;
             }
         }
 
@@ -50,7 +52,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         public Response_String Login(string userEmail, string password)
         {
             Response_String response = new Response_String();
-            response.Response = "hehe";
+            response.Response = "It does not work yet";
             return response;
         }
     }

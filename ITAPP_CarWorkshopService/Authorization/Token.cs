@@ -18,17 +18,19 @@ namespace ITAPP_CarWorkshopService.Authorization
         public string TokenString { get; private set; }
         public DateTime TermOfExpiration { get; private set; }
 
-        public Token()
+        public Token(int userID = -999)
         {
-            GenerateTokenString();
+            GenerateTokenString(userID);
         }
 
-        public void GenerateTokenString()
+        public void GenerateTokenString(int userID)
         {
             // TODO: find a good way to generate token body 
             // this is only temporary solution
             Encryption encryption = new Encryption();
-            TokenString = encryption.Encrypt(DateTime.Now.Ticks.ToString());
+            TokenString = DateTime.Now.Ticks.ToString();
+            TokenString += ":" + userID;
+            TokenString = encryption.Encrypt(TokenString);
         }
 
         public void RegisterToken()

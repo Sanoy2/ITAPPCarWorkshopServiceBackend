@@ -29,12 +29,21 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 
         [Route("api/login/token")]
         [HttpGet]
-        public Response_String Token()
+        public List<string> Token()
         {
-            Response_String response = new Response_String();
+            var list = new List<string>();
             Token token = new Token();
-            response.Response = token.TokenString;
-            return response;
+            list.Add("Encrypted Token: " + token.TokenString);
+            string decryptedToken = new Encryption().Decrypt(token.TokenString);
+            list.Add("Decrypted Token: " + decryptedToken);
+            var splitedString = decryptedToken.Split(':');
+            list.Add("Splited String:");
+            foreach (var item in splitedString)
+            {
+                list.Add(item);
+            }
+            list.Add("This should be user id: " + splitedString[1]);
+            return list;
         }
 
         [HttpPost]

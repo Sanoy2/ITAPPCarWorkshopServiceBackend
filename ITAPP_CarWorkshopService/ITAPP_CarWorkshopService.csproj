@@ -212,6 +212,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Car\CarBrands\CarBrandsController.cs" />
     <Compile Include="Controllers\UserControllers\ClientProfileController.cs" />
+    <Compile Include="Controllers\UserControllers\LoginController.cs" />
     <Compile Include="Controllers\UserControllers\UserController.cs" />
     <Compile Include="Controllers\UserControllers\WorkshopBrandConnections\WorkshopBrandConnectionController.cs" />
     <Compile Include="Controllers\UserControllers\WorkshopComments\WorkshopCommentsController.cs" />

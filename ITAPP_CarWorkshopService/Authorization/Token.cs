@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Threading;
 
 namespace ITAPP_CarWorkshopService.Authorization
 {
@@ -17,6 +18,8 @@ namespace ITAPP_CarWorkshopService.Authorization
 
         public string TokenString { get; private set; }
         public DateTime TermOfExpiration { get; private set; }
+
+        private static readonly Mutex mutex = new Mutex();
 
         public Token(int userID = -999)
         {
@@ -35,12 +38,16 @@ namespace ITAPP_CarWorkshopService.Authorization
 
         public void RegisterToken()
         {
+            mutex.WaitOne();
+
             if (!listOfTokens.Exists(n => n.TokenString == this.TokenString))
             {
                 TermOfExpiration = NewTimeOfExpiration();
 
                 listOfTokens.Add(this);
             }
+
+            mutex.ReleaseMutex();
         }
 
         public static bool ValidateToken(string tokenString)
@@ -51,7 +58,9 @@ namespace ITAPP_CarWorkshopService.Authorization
             }
 
             bool result = false;
-            
+
+            mutex.WaitOne();
+
             if (CheckIfTokenExists(tokenString))
             {
                 Token token = GetTokenFromList(tokenString);
@@ -66,13 +75,20 @@ namespace ITAPP_CarWorkshopService.Authorization
                 }
             }
 
+            mutex.ReleaseMutex();
+
             return result;
         }
 
         private static Token GetTokenFromList(string tokenString)
         {
+            mutex.WaitOne();
+
             Token token = null;
             token = listOfTokens.Find(n => n.TokenString.Equals(tokenString));
+
+            mutex.ReleaseMutex();
+
             return token;
         }
 
@@ -136,7 +152,11 @@ namespace ITAPP_CarWorkshopService.Authorization
 
         public static void Logout(string tokenString)
         {
+            mutex.WaitOne();
+
             RemoveToken(tokenString);
+
+            mutex.ReleaseMutex();
         }
 
     }

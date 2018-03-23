@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http;
+using ITAPP_CarWorkshopService.Authorization;
 
 namespace ITAPP_CarWorkshopService.Authorization
 {
@@ -20,7 +21,9 @@ namespace ITAPP_CarWorkshopService.Authorization
             bool checkApiKeyExists = httpRequestMessage.Headers.TryGetValues("Token", out requestHeaders);
             if(checkApiKeyExists)
             {
-                if(requestHeaders.FirstOrDefault().Equals(AdminApiKey))
+                string tokenString = requestHeaders.FirstOrDefault();
+
+                if(Token.ValidateToken(tokenString))
                 {
                     validKey = true;
                 }

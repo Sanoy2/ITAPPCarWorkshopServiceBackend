@@ -211,6 +211,7 @@
     <Compile Include="Controllers\exampleAuthorizationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\Car\CarBrands\CarBrandsController.cs" />
+    <Compile Include="Controllers\TokenTestController.cs" />
     <Compile Include="Controllers\UserControllers\ClientProfileController.cs" />
     <Compile Include="Controllers\UserControllers\LoginController.cs" />
     <Compile Include="Controllers\UserControllers\UserController.cs" />

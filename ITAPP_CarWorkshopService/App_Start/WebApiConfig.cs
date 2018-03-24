@@ -37,12 +37,14 @@ namespace ITAPP_CarWorkshopService
                 new HttpControllerDispatcher(config), handlers);
 
             config.Routes.MapHttpRoute(
-                name: "AuthorizeRoute",
-                routeTemplate: "protected/{controller}/{id}",
+                name: "DefaultApi2",
+                routeTemplate: "api2/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional },
                 constraints: null,
                 handler: routeHandlers
             );
+
+            config.MessageHandlers.Add(new TokenMessageHandler()); 
         }
     }
 }

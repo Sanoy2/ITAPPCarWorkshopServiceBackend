@@ -10,14 +10,14 @@ namespace ITAPP_CarWorkshopService.Authorization
     {
         private static List<Token> listOfTokens = new List<Token>();
 
-        private static string AdminTokenString = "AdminTokenString";
+        private static string AdminTokenString = "itappADMIN";
 
         private static int timeOfExpirationMinutes = 0;
         private static int timeOfExpirationHours = 0;
         private static int timeOfExpirationDays = 1;
 
         public string TokenString { get; private set; }
-        public DateTime TermOfExpiration { get; private set; }
+        public DateTime DateOfExpiration { get; private set; }
 
         private static readonly Mutex mutex = new Mutex();
 
@@ -26,7 +26,12 @@ namespace ITAPP_CarWorkshopService.Authorization
             GenerateTokenString(userID);
         }
 
-        public void GenerateTokenString(int userID)
+        public static List<Token> GetAllForAdminOnly()
+        {
+            return listOfTokens;
+        }
+
+        private void GenerateTokenString(int userID)
         {
             // TODO: find a good way to generate token body 
             // this is only temporary solution
@@ -42,7 +47,7 @@ namespace ITAPP_CarWorkshopService.Authorization
 
             if (!listOfTokens.Exists(n => n.TokenString == this.TokenString))
             {
-                TermOfExpiration = NewTimeOfExpiration();
+                DateOfExpiration = NewDateOfExpiration();
 
                 listOfTokens.Add(this);
             }
@@ -108,7 +113,7 @@ namespace ITAPP_CarWorkshopService.Authorization
         {
             DateTime timeNow = DateTime.Now;
 
-            if(token.TermOfExpiration.Ticks >= timeNow.Ticks)
+            if(token.DateOfExpiration.Ticks >= timeNow.Ticks)
             {
                 return true;
             }
@@ -131,16 +136,16 @@ namespace ITAPP_CarWorkshopService.Authorization
         private static void RemoveExpiredAllTokens()
         {
             long expirationDateInTicks = DateTime.Now.Ticks;
-            listOfTokens.RemoveAll(n => n.TermOfExpiration.Ticks > expirationDateInTicks);
+            listOfTokens.RemoveAll(n => n.DateOfExpiration.Ticks > expirationDateInTicks);
         }
 
         private static void RefreshTokenTimeOfExpiration(Token token)
         {
             // TODO: refreshing token's time of expirarion 
-            token.TermOfExpiration = NewTimeOfExpiration();
+            token.DateOfExpiration = NewDateOfExpiration();
         }
 
-        private static DateTime NewTimeOfExpiration()
+        private static DateTime NewDateOfExpiration()
         {
             return DateTime.Now.AddMinutes(timeOfExpirationMinutes).AddHours(timeOfExpirationHours).AddDays(timeOfExpirationDays);
         }

@@ -12,8 +12,6 @@ namespace ITAPP_CarWorkshopService.Authorization
 {
     public class TokenMessageHandler : DelegatingHandler
     {
-        private const string AdminApiKey = "ITAPP";
-
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage httpRequestMessage, CancellationToken cancellationToken)
         {
             bool validKey = false;

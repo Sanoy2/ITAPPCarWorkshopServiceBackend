@@ -10,7 +10,7 @@ namespace ITAPP_CarWorkshopService.Controllers
     public class exampleAuthorizationController : ApiController
     {
         [HttpGet]
-        [Route("protected/exampleAuthorization")]
+        [Route("api2/exampleAuthorization")]
         public string GetPrivate()
         {
             return "It works as private!";

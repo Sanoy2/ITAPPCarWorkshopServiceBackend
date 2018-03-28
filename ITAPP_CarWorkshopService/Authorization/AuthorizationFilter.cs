@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Net;
 
 namespace ITAPP_CarWorkshopService.Authorization
 {
@@ -11,35 +13,39 @@ namespace ITAPP_CarWorkshopService.Authorization
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
-            // TODO: REFACTOR THE CODE
-            bool validKey = false;
-            if(actionContext.Request.Headers == null)
-            {
-                actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
-            }
-            else
-            {
-                IEnumerable<string> requestHeaders;
-                bool checkApiKeyExists = actionContext.Request.Headers.TryGetValues("Token", out requestHeaders);
-                if (checkApiKeyExists)
-                {
-                    string tokenString = requestHeaders.FirstOrDefault();
+            bool tokenValidated = CheckIfTokenValidated(actionContext);
 
-                    if (Token.ValidateToken(tokenString))
-                    {
-                        validKey = true;
-                    }
-                    else
-                    {
-                        actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
-                    }
-                }
-                else
+            if (!tokenValidated)
+            {
+                actionContext.Response = CreateResponseIfRequestUnauthorized();
+            }
+        }
+
+        private static HttpResponseMessage CreateResponseIfRequestUnauthorized()
+        {
+            var message = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+
+            message.Content = new StringContent("401 Unauthorized");
+
+            return message;
+        }
+
+        private static bool CheckIfTokenValidated(HttpActionContext actionContext)
+        {
+            bool validKey = false;
+            IEnumerable<string> requestHeaders;
+            bool checkIfTokenExists = actionContext.Request.Headers.TryGetValues("Token", out requestHeaders);
+            if (checkIfTokenExists)
+            {
+                string tokenString = requestHeaders.FirstOrDefault();
+
+                if (Token.ValidateToken(tokenString))
                 {
-                    actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+                    validKey = true;
                 }
             }
-            
+
+            return validKey;
         }
     }
 }

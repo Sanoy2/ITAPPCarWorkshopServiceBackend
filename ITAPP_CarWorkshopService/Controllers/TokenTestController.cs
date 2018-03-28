@@ -8,10 +8,9 @@ using ITAPP_CarWorkshopService.Authorization;
 
 namespace ITAPP_CarWorkshopService.Controllers
 {
-    [Route("api2/tokentest")]
     public class TokenTestController : ApiController
     {
-        /*
+        
         [HttpPost]
         [Route("api/TokenTest")]
         public string Post([FromBody] int id)
@@ -20,20 +19,20 @@ namespace ITAPP_CarWorkshopService.Controllers
             token.RegisterToken();
             return token.TokenString;
         }
-        */
+        
         [HttpGet]
-        //[Route("api2/TokenTest")]
+        [AuthorizationFilter]
+        [Route("api/TokenTest")]
         public string Get()
         {
             return "Looks like you have a good token";
         }
-        /*
+        
         [HttpGet]
-        [Route("api/TokenTest")]
+        [Route("api/TokenTest/all")]
         public List<Token> GetAll()
         {
             return Token.GetAllForAdminOnly();
         }
-        */
     }
 }

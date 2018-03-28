@@ -25,26 +25,6 @@ namespace ITAPP_CarWorkshopService
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
-            // List of delegating handlers.
-            DelegatingHandler[] handlers = new DelegatingHandler[]
-            {
-                new TokenMessageHandler()
-            };
-
-            // Create a message handler chain with an end-point.
-            var routeHandlers = HttpClientFactory.CreatePipeline(
-                new HttpControllerDispatcher(config), handlers);
-
-            config.Routes.MapHttpRoute(
-                name: "DefaultApi2",
-                routeTemplate: "api2/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional },
-                constraints: null,
-                handler: routeHandlers
-            );
-
-            config.MessageHandlers.Add(new TokenMessageHandler()); 
         }
     }
 }

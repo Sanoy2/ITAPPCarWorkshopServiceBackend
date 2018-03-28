@@ -11,6 +11,7 @@ namespace ITAPP_CarWorkshopService.Authorization
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
+            // TODO: REFACTOR THE CODE
             bool validKey = false;
             if(actionContext.Request.Headers == null)
             {

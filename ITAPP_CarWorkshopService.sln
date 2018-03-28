@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITAPP_CarWorkshopService", "ITAPP_CarWorkshopService\ITAPP_CarWorkshopService.csproj", "{77241BD7-D68E-4D74-8110-0B7EB682ADCA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITAPP_CarWorkshopService.Tests", "ITAPP_CarWorkshopService.Tests\ITAPP_CarWorkshopService.Tests.csproj", "{FBCB4DE9-0F5E-4015-828F-569FE420008C}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "Documentation\Documentation.shfbproj", "{658348ED-ECC9-4EA8-B700-7FA7ACC7A180}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FBCB4DE9-0F5E-4015-828F-569FE420008C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBCB4DE9-0F5E-4015-828F-569FE420008C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBCB4DE9-0F5E-4015-828F-569FE420008C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{658348ED-ECC9-4EA8-B700-7FA7ACC7A180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{658348ED-ECC9-4EA8-B700-7FA7ACC7A180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{658348ED-ECC9-4EA8-B700-7FA7ACC7A180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{658348ED-ECC9-4EA8-B700-7FA7ACC7A180}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

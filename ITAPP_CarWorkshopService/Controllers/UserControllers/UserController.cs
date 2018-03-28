@@ -6,11 +6,41 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
 using ITAPP_CarWorkshopService.ResonseClass;
-
+/// <summary>
+/// Controller
+/// </summary>
 namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 {
+    /// <summary>
+    /// User Controller
+    /// </summary>
     public class UserController : ApiController
     {
+        /// <summary>
+        /// GET method &#xD;
+        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user + ID &#xD;
+        /// </summary>
+        /// <param name="ID">User_ID</param>
+        /// <returns>Return a specyfic user with passed id or null if there is no such user</returns>
+        [HttpGet]
+        public User Get_User(int ID)
+        {
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+                return db.Users.FirstOrDefault(p => p.User_ID == ID);
+        }
+        /// <summary>
+        /// POST method &#xD;
+        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user &#xD;
+        /// User_ID is automaticly incremented so as a User_ID = "" &#xD;
+        /// </summary>
+        /// <param name="New_User">
+        /// {
+        ///     User_email =, &#xD;
+        ///     User_ID =, &#xD;
+        ///     User_password =, &#xD;
+        /// }
+        /// </param>
+        /// <returns>Returns JSON with { Response : string }, string countains : "Item was added" or "Item already exists"</returns>
         [HttpPost]
         public Response_String Add_User([FromBody] User New_User)
         {
@@ -19,28 +49,25 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 var User = db.Users.FirstOrDefault(user => user.User_email == New_User.User_email);
                 if (User != null)
                 {
-                    return new Response_String() { Response = "User Added" };
+                    return new Response_String() { Response = "Item already exists" };
                 }
                 db.Users.Add(New_User);
                 db.SaveChanges();
-              ;
-                return new Response_String() { Response = $"New user was created {User.User_email} , {User.User_ID}" };
+                return new Response_String() { Response = "Item was added" };
             }
         }
-        [HttpGet]
-        public User Get_User(int ID)
-        {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-                return db.Users.FirstOrDefault(p => p.User_ID == ID);
-        }
-
-        [HttpGet]
-        public List<User> Get_All_User()
-        {
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            return db.Users.ToList();
-        }
-
+        /// <summary>
+        /// PUT method &#xD;
+        /// URL : http://itappcarworkshopservice.azurewebsites.net/api/user &#xD;
+        /// User_ID should be passed by in body &#xD;
+        /// </summary>
+        /// <param name="User">
+        /// {
+        ///     User_email =, &#xD;
+        ///     User_ID =, &#xD;
+        ///     User_password =, &#xD;
+        /// }</param>
+        /// <returns>Returns JSON with { Response : string }, string countains : "Item was modify" , "Item already exists" or "Item does not exsists"</returns>
         [HttpPut]
         public Response_String Update_User([FromBody]User User)
         {
@@ -50,7 +77,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 var User_Mail_Repeted = db.Users.Find(db.Users.FirstOrDefault(p => p.User_email == User.User_email)) != null ? true : false;
                 if (User_Mail_Repeted)
                 {
-                    return new Response_String() { Response = "User with that email already exisit's" };
+                    return new Response_String() { Response = "Item already exists" };
                 }
                 if (user != null)
                 {
@@ -58,11 +85,17 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                     user = User;
                     user.User_ID = ID;
                     db.SaveChangesAsync();
-                    return new Response_String() { Response = "User modified" }; ;
+                    return new Response_String() { Response = "Item was modify" }; ;
                 }
-                return new Response_String() { Response = "User undefined" }; ;
+                return new Response_String() { Response = "Item does not exsists" }; ;
             }
         }
+        /// <summary>
+        /// DELETE method &#xD;
+        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user/ +ID &#xD;
+        /// </summary>
+        /// <param name="ID">User_ID</param>
+        /// <returns>Returns JSON with { Response : string }, string countains : "Item was removed" or "Item does not exsists"</returns>
         [HttpDelete]
         public Response_String Delete_User(int ID)
         {
@@ -73,9 +106,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 {
                     db.Users.Remove(User);
                     db.SaveChangesAsync();
-                    return new Response_String() { Response = "User Deleted" };
+                    return new Response_String() { Response = "Item was removed" };
                 }
-                return new Response_String() { Response = "User with id was not on the list" };
+                return new Response_String() { Response = "Item does not exsists" };
             }
         }
     }

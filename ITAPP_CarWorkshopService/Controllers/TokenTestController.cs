@@ -25,7 +25,12 @@ namespace ITAPP_CarWorkshopService.Controllers
         [Route("api/TokenTest")]
         public string Get()
         {
-            return "Looks like you have a good token";
+            int userId = Authorization.Token.GetUserIdFromRequestHeader(Request);
+            System.Text.StringBuilder builder = new System.Text.StringBuilder();
+            builder.AppendLine("Looks like you have a good token.");
+            builder.AppendLine("User ID encrypted inside the token: " + userId);
+            builder.AppendLine(" '-999' is Admin token");
+            return builder.ToString();
         }
         
         [HttpGet]

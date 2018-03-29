@@ -55,6 +55,11 @@ namespace ITAPP_CarWorkshopService.Authorization
 
         public static int GetUserIdFromEncryptedTokenString(string encryptedTokenString)
         {
+            if(encryptedTokenString.Equals(AdminTokenString))
+            {
+                return -999;
+            }
+
             Encryption encryption = new Encryption();
             string decryptedTokenString = encryption.Decrypt(encryptedTokenString);
             string[] splitString = decryptedTokenString.Split(':');

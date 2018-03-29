@@ -54,16 +54,20 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         public Response_String Login([FromBody] User user)
         {
             Response_String response = new Response_String();
-            response.Response = UserManager.Login(user.User_email, user.User_password);
+            response.Response = UserManager.Login(user);
             return response;
         }
-
+        
         [HttpPut]
         [Route("api/login")]
-        public Response_String ChangePassword()
+        public Response_String ChangePassword(string oldPass, string newPass)
         { 
+            int userId = Authorization.Token.GetUserIdFromRequestHeader(Request);
+
+            UserManager.ChangePassword(userId, oldPass, newPass);
+
             var response = new Response_String();
-            response.Response = "Not implemented yet";
+            response.Response = "Probably changed";
             return response;
         }
 
@@ -72,9 +76,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         [Route("api/login")]
         public Response_String Logout()
         {
-            IEnumerable<string> headerValues;
-            headerValues = Request.Headers.GetValues("Token");
-            string tokenString = headerValues.First();
+            string tokenString = Authorization.Token.GetTokenStringFromRequestHeader(Request);
             Authorization.Token.Logout(tokenString);
 
             var response = new Response_String();

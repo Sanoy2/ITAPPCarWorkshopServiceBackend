@@ -32,14 +32,20 @@ namespace ITAPP_CarWorkshopService.Authorization
             return listOfTokens;
         }
 
-        public static int GetUserIdFromHeader(HttpRequestMessage request)
+        public static int GetUserIdFromRequestHeader(HttpRequestMessage request)
         {
-            // TODO: 
-            // Check if it works (I have no idea what can happen)
             IEnumerable<string> headerValues;
             headerValues = request.Headers.GetValues("Token");
             string tokenString = headerValues.First();
             return GetUserIdFromEncryptedTokenString(tokenString);
+        }
+
+        public static string GetTokenStringFromRequestHeader(HttpRequestMessage request)
+        {
+            IEnumerable<string> headerValues;
+            headerValues = request.Headers.GetValues("Token");
+            string tokenString = headerValues.First();
+            return tokenString;
         }
 
         public static int GetUserIdFromEncryptedTokenString(Token token)

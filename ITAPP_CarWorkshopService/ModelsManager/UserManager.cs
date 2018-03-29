@@ -11,14 +11,16 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
-        public static string Login(string email, string password)
+        public static string Login(User user)
         {
             User User;
-            email = email.ToLower();
+            string email = user.User_email.ToLower();
+            string password = user.User_password;
+
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 mutex.WaitOne();
-                User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
+                User = db.Users.FirstOrDefault(record => record.User_email.ToLower() == email);
                 mutex.ReleaseMutex();
             }
 

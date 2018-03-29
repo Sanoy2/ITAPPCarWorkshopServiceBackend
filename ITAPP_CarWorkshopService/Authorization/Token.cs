@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Threading;
+using System.Net.Http;
 
 namespace ITAPP_CarWorkshopService.Authorization
 {
@@ -29,6 +30,16 @@ namespace ITAPP_CarWorkshopService.Authorization
         public static List<Token> GetAllForAdminOnly()
         {
             return listOfTokens;
+        }
+
+        public static int GetUserIdFromHeader(HttpRequestMessage request)
+        {
+            // TODO: 
+            // Check if it works (I have no idea what can happen)
+            IEnumerable<string> headerValues;
+            headerValues = request.Headers.GetValues("Token");
+            string tokenString = headerValues.First();
+            return GetUserIdFromEncryptedTokenString(tokenString);
         }
 
         public static int GetUserIdFromEncryptedTokenString(Token token)

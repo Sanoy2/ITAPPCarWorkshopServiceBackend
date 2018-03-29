@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
 using ITAPP_CarWorkshopService.Authorization;
+using ITAPP_CarWorkshopService.ModelsManager;
 
 namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 {
@@ -21,7 +22,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 headerValues = Request.Headers.GetValues("Token");
                 return headerValues;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 var result = new List<string>();
                 result.Add("Token is missing in header");
@@ -49,11 +50,23 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         }
 
         [HttpPost]
-        public Response_String Login(string userEmail, string password)
+        [Route("api/login")]
+        public Response_String Login([FromBody] User user)
         {
             Response_String response = new Response_String();
-            response.Response = "It does not work yet";
+            response.Response = UserManager.Login(user.User_email, user.User_password);
             return response;
+        }
+
+        [HttpDelete]
+        [AuthorizationFilter]
+        [Route("api/login")]
+        public void Logout()
+        {
+            IEnumerable<string> headerValues;
+            headerValues = Request.Headers.GetValues("Token");
+            string tokenString = headerValues.First();
+            Authorization.Token.Logout(tokenString);
         }
     }
 }

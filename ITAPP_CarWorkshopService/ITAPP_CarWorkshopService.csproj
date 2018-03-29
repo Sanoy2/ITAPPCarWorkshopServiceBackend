@@ -243,6 +243,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
+    <Compile Include="ModelsManager\UserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResonseClass\Response_Class.cs" />
     <Compile Include="User.cs">

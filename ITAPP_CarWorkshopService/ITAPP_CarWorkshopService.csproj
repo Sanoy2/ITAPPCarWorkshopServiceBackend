@@ -188,11 +188,10 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Authorization\Authorization.cs" />
+    <Compile Include="Authorization\AuthorizationFilter.cs" />
     <Compile Include="Authorization\DateTimeManager.cs" />
     <Compile Include="Authorization\Encryption.cs" />
     <Compile Include="Authorization\Token.cs" />
-    <Compile Include="Authorization\TokenMessageHandler.cs" />
     <Compile Include="Cars_followed.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>

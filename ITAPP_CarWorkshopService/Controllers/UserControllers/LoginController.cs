@@ -58,15 +58,29 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             return response;
         }
 
+        [HttpPut]
+        [Route("api/login")]
+        public Response_String ChangePassword()
+        { 
+            var response = new Response_String();
+            response.Response = "Not implemented yet";
+            return response;
+        }
+
         [HttpDelete]
         [AuthorizationFilter]
         [Route("api/login")]
-        public void Logout()
+        public Response_String Logout()
         {
             IEnumerable<string> headerValues;
             headerValues = Request.Headers.GetValues("Token");
             string tokenString = headerValues.First();
             Authorization.Token.Logout(tokenString);
+
+            var response = new Response_String();
+            response.Response = "Probably logged out and removed: " + tokenString;
+            response.Response += " from token list.";
+            return response;
         }
     }
 }

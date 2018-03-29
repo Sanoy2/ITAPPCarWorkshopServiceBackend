@@ -22,12 +22,12 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 mutex.ReleaseMutex();
             }
 
-            if(User == null)
+            if (User == null)
             {
                 throw NoUserOfGivenEmail(email);
             }
-            
-            if(User.User_password.Equals(password))
+
+            if (User.User_password.Equals(password))
             {
                 return GenerateTokenForUser(email);
             }
@@ -37,12 +37,39 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
         }
 
+        public static void ChangePassword(int userId, string oldPassword, string newPassword)
+        {
+            mutex.WaitOne();
+            User User;
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            User = db.Users.FirstOrDefault(user => user.User_ID == userId);
+
+            if (User == null)
+            {
+                throw NoUserOfGivenId(userId);
+            }
+
+            if (User.User_password.Equals(oldPassword))
+            {
+                User.User_password = newPassword;
+                db.SaveChanges();
+            }
+            else
+            {
+                throw WrongPassword(userId);
+            }
+
+            mutex.ReleaseMutex();
+        }
+
         private static string GenerateTokenForUser(string email)
         {
             int userId;
             Token token;
             string result;
-            
+
             try
             {
                 userId = GetUserIdByUserEmailPrivate(email);
@@ -66,7 +93,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
             }
 
-            if(User == null)
+            if (User == null)
             {
                 throw NoUserOfGivenEmail(email);
             }
@@ -104,7 +131,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 }
             }
         }
-            
+
         private static Exception NoUserOfGivenEmail(string email)
         {
             string exceptionMessage;
@@ -130,6 +157,16 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             string exceptionMessage;
             exceptionMessage = "Wrong password for user: ";
             exceptionMessage += email;
+            exceptionMessage += ".";
+            Exception exception = new Exception(exceptionMessage);
+            return exception;
+        }
+
+        private static Exception WrongPassword(int id)
+        {
+            string exceptionMessage;
+            exceptionMessage = "Wrong password for user id: ";
+            exceptionMessage += id;
             exceptionMessage += ".";
             Exception exception = new Exception(exceptionMessage);
             return exception;

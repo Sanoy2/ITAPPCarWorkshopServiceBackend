@@ -12,43 +12,6 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 {
     public class LoginController : ApiController
     {
-        [Route("api/login/header")]
-        [HttpGet]
-        public IEnumerable<string> Header()
-        {
-            try
-            {
-                IEnumerable<string> headerValues;
-                headerValues = Request.Headers.GetValues("Token");
-                return headerValues;
-            }
-            catch (Exception e)
-            {
-                var result = new List<string>();
-                result.Add("Token is missing in header");
-                return result;
-            }
-        }
-
-        [Route("api/login/token")]
-        [HttpGet]
-        public List<string> Token()
-        {
-            var list = new List<string>();
-            Token token = new Token();
-            list.Add("Encrypted Token: " + token.TokenString);
-            string decryptedToken = new Encryption().Decrypt(token.TokenString);
-            list.Add("Decrypted Token: " + decryptedToken);
-            var splitedString = decryptedToken.Split(':');
-            list.Add("Splited String:");
-            foreach (var item in splitedString)
-            {
-                list.Add(item);
-            }
-            list.Add("This should be user id: " + splitedString[1]);
-            return list;
-        }
-
         [HttpPost]
         [Route("api/login")]
         public Response_String Login([FromBody] User user)
@@ -59,6 +22,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         }
         
         [HttpPut]
+        [AuthorizationFilter]
         [Route("api/login")]
         public Response_String ChangePassword(string oldPass, string newPass)
         { 

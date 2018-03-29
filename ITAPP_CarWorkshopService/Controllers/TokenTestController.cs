@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.Authorization;
+using ITAPP_CarWorkshopService.ResonseClass;
 
 namespace ITAPP_CarWorkshopService.Controllers
 {
@@ -23,14 +24,17 @@ namespace ITAPP_CarWorkshopService.Controllers
         [HttpGet]
         [AuthorizationFilter]
         [Route("api/TokenTest")]
-        public string Get()
+        public Response_String Get()
         {
             int userId = Authorization.Token.GetUserIdFromRequestHeader(Request);
             System.Text.StringBuilder builder = new System.Text.StringBuilder();
-            builder.AppendLine("Looks like you have a good token.");
-            builder.AppendLine("User ID encrypted inside the token: " + userId);
-            builder.AppendLine(" '-999' is Admin token");
-            return builder.ToString();
+            builder.AppendLine(" Looks like you have a good token. ");
+            builder.AppendLine(" Id '-999' is Admin token. ");
+            builder.AppendLine(" User ID encrypted inside the token: " + userId);
+
+            var response = new Response_String();
+            response.Response = builder.ToString();
+            return response;
         }
         
         [HttpGet]

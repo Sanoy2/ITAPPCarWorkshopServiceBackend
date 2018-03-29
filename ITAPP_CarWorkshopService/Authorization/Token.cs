@@ -31,6 +31,21 @@ namespace ITAPP_CarWorkshopService.Authorization
             return listOfTokens;
         }
 
+        public static int GetUserIdFromEncryptedTokenString(Token token)
+        {
+            return GetUserIdFromEncryptedTokenString(token.TokenString);
+        }
+
+        public static int GetUserIdFromEncryptedTokenString(string encryptedTokenString)
+        {
+            Encryption encryption = new Encryption();
+            string decryptedTokenString = encryption.Decrypt(encryptedTokenString);
+            string[] splitString = decryptedTokenString.Split(':');
+            int result = -1;
+            Int32.TryParse(splitString[1], out result);
+            return result;
+        }
+
         private void GenerateTokenString(int userID)
         {
             // TODO: find a good way to generate token body 
@@ -50,6 +65,11 @@ namespace ITAPP_CarWorkshopService.Authorization
                 DateOfExpiration = NewDateOfExpiration();
 
                 listOfTokens.Add(this);
+            }
+            else
+            {
+                Token token = GetTokenFromList(this.TokenString);
+                RefreshTokenTimeOfExpiration(token);
             }
 
             mutex.ReleaseMutex();

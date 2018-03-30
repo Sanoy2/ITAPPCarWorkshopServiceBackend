@@ -33,5 +33,65 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
             return carBrand;
         }
+
+        public static string AddNewCarBrand(Car_Brands carBrand)
+        {
+            string result = "";
+
+            carBrand.Brand_Name = MakeFirstLetterUppercaseTheRestLowercase(carBrand.Brand_Name);
+
+            if (CheckIfCarBrandAlreadyExsistsInDB(carBrand.Brand_Name))
+            {
+                result = "Brand already exists in DB.";
+                return result;
+            }
+
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            {
+                mutex.WaitOne();
+                db.Car_Brands.Add(carBrand);
+                db.SaveChanges();
+                mutex.ReleaseMutex();
+            }
+
+            result = "Brand was added to DB.";
+
+            return result;
+        }
+
+        private static bool CheckIfCarBrandAlreadyExsistsInDB(string carBrandName)
+        {
+            bool result = false;
+            carBrandName = MakeFirstLetterUppercaseTheRestLowercase(carBrandName);
+
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            {
+                if (db.Car_Brands.Any(brandName => brandName.Brand_Name == carBrandName))
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        private static string MakeFirstLetterUppercaseTheRestLowercase(string oldString)
+        {
+            if (oldString.Length == 0)
+            {
+                return oldString;
+            }
+
+            string newString = oldString;
+
+            newString = newString.ToLower();
+
+            string firstLetter = newString.Substring(0, 1);
+            firstLetter = firstLetter.ToUpper();
+
+            newString = newString.Replace(newString[0], firstLetter[0]);
+
+            return newString;
+        }
     }
 }

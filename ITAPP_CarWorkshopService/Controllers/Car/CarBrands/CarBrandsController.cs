@@ -30,33 +30,17 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
         {
             return CarBrandManager.GetCarBrandById(id);
         }
-        /// <summary>
-        /// POST method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/carprofile &#xD;
-        /// Brand_ID is automaticly incremented so as a Brand_ID = "" &#xD;
-        /// </summary>
-        /// <param name="New_Brand">{ Brand_ID =, &#xD; Brand_Name = &#xD; }</param>
-        /// <returns>Returns JSON with { Response : string }, string countains : "Item was added" or "Item already exists"</returns>
+
         [HttpPost]
         public Response_String Add_New_Brand([FromBody] Car_Brands New_Brand)
         {
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            foreach (var Car in db.Car_Brands)
-            {
-                if (New_Brand.Brand_Name.ToLower() == Car.Brand_Name.ToLower())
-                {
-                    return new Response_String() { Response = "Item already exists" };
-                }
-            }
-            var newBrand = new Car_Brands()
-            {
-                Brand_Name = New_Brand.Brand_Name.ToLower()
-            };
-            newBrand.Brand_Name = newBrand.Brand_Name.Replace(newBrand.Brand_Name[0], newBrand.Brand_Name[0].ToString().ToUpper().ToCharArray()[0]);
-            db.Car_Brands.Add(newBrand);
-            db.SaveChanges();
-            return new Response_String() { Response = "Item was added" };
+            var response = new Response_String();
+            response.Response = CarBrandManager.AddNewCarBrand(New_Brand);
+            return response;
         }
+
+
+
         /// <summary>
         /// PUT method &#xD;
         /// URL = http://itappcarworkshopservice.azurewebsites.net/api/carprofile &#xD;

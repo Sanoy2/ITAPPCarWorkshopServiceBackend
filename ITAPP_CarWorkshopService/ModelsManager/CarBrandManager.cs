@@ -12,25 +12,28 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static List<Car_Brands> GetListOfAllCarBrands()
         {
-            var listOfCarBrands = new List<Car_Brands>();
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                mutex.WaitOne();
-                listOfCarBrands = db.Car_Brands.ToList();
-                mutex.ReleaseMutex();
-            }
+            List<Car_Brands> listOfCarBrands = new List<Car_Brands>();
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+
+            listOfCarBrands = db.Car_Brands.ToList();
+
+            mutex.ReleaseMutex();
+
             return listOfCarBrands;
         }
 
         public static Car_Brands GetCarBrandById(int carBrandId)
         {
             var carBrand = new Car_Brands();
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                mutex.WaitOne();
-                carBrand = db.Car_Brands.FirstOrDefault(car_brand => car_brand.Brand_ID == carBrandId);
-                mutex.ReleaseMutex();
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+            carBrand = db.Car_Brands.FirstOrDefault(car_brand => car_brand.Brand_ID == carBrandId);
+            mutex.ReleaseMutex();
+
             return carBrand;
         }
 
@@ -49,12 +52,11 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 return result;
             }
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                db.Car_Brands.Add(carBrand);
-                db.SaveChanges();
-                mutex.ReleaseMutex();
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            db.Car_Brands.Add(carBrand);
+            db.SaveChanges();
+            mutex.ReleaseMutex();
 
             result = "Brand was added to DB.";
 
@@ -76,13 +78,12 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 return result;
             }
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                Car_Brands exsistingCarBrand;
-                exsistingCarBrand = db.Car_Brands.FirstOrDefault(brand => brand.Brand_Name == carBrand.Brand_Name);
-                exsistingCarBrand.Brand_Name = carBrand.Brand_Name;
-                db.SaveChanges();
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            Car_Brands exsistingCarBrand;
+            exsistingCarBrand = db.Car_Brands.FirstOrDefault(brand => brand.Brand_Name == carBrand.Brand_Name);
+            exsistingCarBrand.Brand_Name = carBrand.Brand_Name;
+            db.SaveChanges();
 
             mutex.ReleaseMutex();
 
@@ -104,13 +105,12 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 return result;
             }
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                Car_Brands carBrandToDelete;
-                carBrandToDelete = db.Car_Brands.FirstOrDefault(brand => brand.Brand_ID == brandId);
-                db.Car_Brands.Remove(carBrandToDelete);
-                db.SaveChanges();
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            Car_Brands carBrandToDelete;
+            carBrandToDelete = db.Car_Brands.FirstOrDefault(brand => brand.Brand_ID == brandId);
+            db.Car_Brands.Remove(carBrandToDelete);
+            db.SaveChanges();
 
             mutex.ReleaseMutex();
 
@@ -124,12 +124,11 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             bool result = false;
             carBrandName = MakeFirstLetterUppercaseTheRestLowercase(carBrandName);
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            if (db.Car_Brands.Any(brandName => brandName.Brand_Name == carBrandName))
             {
-                if (db.Car_Brands.Any(brandName => brandName.Brand_Name == carBrandName))
-                {
-                    result = true;
-                }
+                result = true;
             }
 
             return result;
@@ -139,12 +138,11 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             bool result = false;
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            if (db.Car_Brands.Any(brandName => brandName.Brand_ID == carBrandId))
             {
-                if (db.Car_Brands.Any(brandName => brandName.Brand_ID == carBrandId))
-                {
-                    result = true;
-                }
+                result = true;
             }
 
             return result;

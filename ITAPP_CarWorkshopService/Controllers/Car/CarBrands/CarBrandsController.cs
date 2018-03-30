@@ -18,23 +18,21 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
     /// </summary>
     public class CarBrandsController : ApiController
     {
+        
         [HttpGet]
-        [Route("api/carbrands")]
         public List<Car_Brands> GetAllCarBrands()
         {
             return CarBrandManager.GetListOfAllCarBrands();
         }
-
+        
         [HttpGet]
-        [Route("api/carbrands/5")]
-        public Car_Brands GerCarBrandSpecifiedById(int carBrandId)
+        public Car_Brands GetCarBrandSpecifiedById(int id)
         {
-            return CarBrandManager.GetCarBrandById(carBrandId);
+            return CarBrandManager.GetCarBrandById(id);
         }
 
         [HttpPost]
         [AuthorizationFilter]
-        [Route("api/carbrands")]
         public Response_String AddNewCarBrand([FromBody] Car_Brands CarBrandToBeAdded)
         {
             var response = new Response_String();
@@ -44,7 +42,6 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
 
         [HttpPut]
         [AuthorizationFilter]
-        [Route("api/carbrands")]
         public Response_String ModifyExistingCarBrand([FromBody] Car_Brands CarBrandToBeModified)
         {
             var response = new Response_String();
@@ -54,7 +51,6 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
 
         [HttpDelete]
         [AuthorizationFilter]
-        [Route("api/carbrands")]
         public Response_String DeleteExistingCarBrand(int carBrandId)
         {
             var response = new Response_String();

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
 using ITAPP_CarWorkshopService.ModelsManager;
+using ITAPP_CarWorkshopService.Authorization;
 
 /// <summary>
 /// Controller
@@ -32,6 +33,7 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
         }
 
         [HttpPost]
+        [AuthorizationFilter]
         [Route("api/carbrands")]
         public Response_String AddNewCarBrand([FromBody] Car_Brands CarBrandToBeAdded)
         {
@@ -41,6 +43,7 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
         }
 
         [HttpPut]
+        [AuthorizationFilter]
         [Route("api/carbrands")]
         public Response_String ModifyExistingCarBrand([FromBody] Car_Brands CarBrandToBeModified)
         {
@@ -50,6 +53,7 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
         }
 
         [HttpDelete]
+        [AuthorizationFilter]
         [Route("api/carbrands")]
         public Response_String DeleteExistingCarBrand(int carBrandId)
         {

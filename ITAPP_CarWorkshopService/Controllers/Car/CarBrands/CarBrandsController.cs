@@ -20,14 +20,14 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
     {
         [HttpGet]
         [Route("api/carbrands")]
-        public List<Car_Brands> Get_All_Of_Brands()
+        public List<Car_Brands> GetAllCarBrands()
         {
             return CarBrandManager.GetListOfAllCarBrands();
         }
 
         [HttpGet]
         [Route("api/carbrands/5")]
-        public Car_Brands Get_Brand(int carBrandId)
+        public Car_Brands GerCarBrandSpecifiedById(int carBrandId)
         {
             return CarBrandManager.GetCarBrandById(carBrandId);
         }

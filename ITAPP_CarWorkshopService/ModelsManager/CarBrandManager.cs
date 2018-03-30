@@ -49,11 +49,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 return result;
             }
 
-            mutex.ReleaseMutex();
-
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                mutex.WaitOne();
                 db.Car_Brands.Add(carBrand);
                 db.SaveChanges();
                 mutex.ReleaseMutex();
@@ -81,13 +78,43 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                Car_Brands exsistingCarBrand = db.Car_Brands.FirstOrDefault(brand => brand.Brand_Name == carBrand.Brand_Name);
+                Car_Brands exsistingCarBrand;
+                exsistingCarBrand = db.Car_Brands.FirstOrDefault(brand => brand.Brand_Name == carBrand.Brand_Name);
                 exsistingCarBrand.Brand_Name = carBrand.Brand_Name;
                 db.SaveChanges();
-                result = "Brand was probably modified."; 
             }
 
             mutex.ReleaseMutex();
+
+            result = "Brand was probably modified.";
+
+            return result;
+        }
+
+        public static string DeleteCarBrandById(int brandId)
+        {
+            string result = "";
+
+            mutex.WaitOne();
+
+            if (!CheckIfCarBrandAlreadyExsistsInDB(brandId))
+            {
+                result = "Brand does not exists in DB.";
+                mutex.ReleaseMutex();
+                return result;
+            }
+
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            {
+                Car_Brands carBrandToDelete;
+                carBrandToDelete = db.Car_Brands.FirstOrDefault(brand => brand.Brand_ID == brandId);
+                db.Car_Brands.Remove(carBrandToDelete);
+                db.SaveChanges();
+            }
+
+            mutex.ReleaseMutex();
+
+            result = "Brand was probably deleted.";
 
             return result;
         }
@@ -100,6 +127,21 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
                 if (db.Car_Brands.Any(brandName => brandName.Brand_Name == carBrandName))
+                {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        private static bool CheckIfCarBrandAlreadyExsistsInDB(int carBrandId)
+        {
+            bool result = false;
+
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            {
+                if (db.Car_Brands.Any(brandName => brandName.Brand_ID == carBrandId))
                 {
                     result = true;
                 }

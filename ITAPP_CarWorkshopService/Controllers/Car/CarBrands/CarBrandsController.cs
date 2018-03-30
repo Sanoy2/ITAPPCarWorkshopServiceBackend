@@ -32,36 +32,19 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
         }
 
         [HttpPost]
-        public Response_String Add_New_Brand([FromBody] Car_Brands New_Brand)
+        public Response_String AddNewCarBrand([FromBody] Car_Brands CarBrandToAdd)
         {
             var response = new Response_String();
-            response.Response = CarBrandManager.AddNewCarBrand(New_Brand);
+            response.Response = CarBrandManager.AddNewCarBrand(CarBrandToAdd);
             return response;
         }
 
-
-
-        /// <summary>
-        /// PUT method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/carprofile &#xD;
-        /// Brand_ID should be passed by in body &#xD;
-        /// </summary>
-        /// <param name="ModifyCarBrand">{ Brand_ID =, &#xD; Brand_Name = &#xD; }</param>
-        /// <returns>Returns JSON with { Response : string }, string countains : "Item was modify" or "Item does not exsists"</returns>
         [HttpPut]
-        public Response_String Modify_Brand([FromBody] Car_Brands ModifyCarBrand)
+        public Response_String ModifyExistingCarBrand([FromBody] Car_Brands CarBrandToBeModified)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                var Old = db.Car_Brands.FirstOrDefault(p => p.Brand_ID == ModifyCarBrand.Brand_ID);
-                if( Old != null)
-                {
-                    Old = ModifyCarBrand;
-                    db.SaveChanges();
-                    return new Response_String() { Response = "Item was modify" };
-                }
-                return new Response_String() { Response = "Item does not exists" };
-            }
+            var response = new Response_String();
+            response.Response = CarBrandManager.ModifyCarBrand(CarBrandToBeModified);
+            return response;
         }
         /// <summary>
         /// DELETE method &#xD;

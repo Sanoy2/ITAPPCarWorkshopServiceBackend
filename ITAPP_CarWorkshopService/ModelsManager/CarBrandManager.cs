@@ -40,11 +40,16 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             carBrand.Brand_Name = MakeFirstLetterUppercaseTheRestLowercase(carBrand.Brand_Name);
 
+            mutex.WaitOne();
+
             if (CheckIfCarBrandAlreadyExsistsInDB(carBrand.Brand_Name))
             {
                 result = "Brand already exists in DB.";
+                mutex.ReleaseMutex();
                 return result;
             }
+
+            mutex.ReleaseMutex();
 
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
@@ -55,6 +60,34 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             result = "Brand was added to DB.";
+
+            return result;
+        }
+
+        public static string ModifyCarBrand(Car_Brands carBrand)
+        {
+            string result = "";
+
+            carBrand.Brand_Name = MakeFirstLetterUppercaseTheRestLowercase(carBrand.Brand_Name);
+
+            mutex.WaitOne();
+
+            if (!CheckIfCarBrandAlreadyExsistsInDB(carBrand.Brand_Name))
+            {
+                result = "Brand does not exists in DB.";
+                mutex.ReleaseMutex();
+                return result;
+            }
+
+            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            {
+                Car_Brands exsistingCarBrand = db.Car_Brands.FirstOrDefault(brand => brand.Brand_Name == carBrand.Brand_Name);
+                exsistingCarBrand.Brand_Name = carBrand.Brand_Name;
+                db.SaveChanges();
+                result = "Brand was probably modified."; 
+            }
+
+            mutex.ReleaseMutex();
 
             return result;
         }

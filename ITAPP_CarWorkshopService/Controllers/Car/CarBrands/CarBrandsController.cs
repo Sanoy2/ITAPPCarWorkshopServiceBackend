@@ -18,21 +18,17 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
     public class CarBrandsController : ApiController
     {
         [HttpGet]
+        [Route("api/carbrands")]
         public List<Car_Brands> Get_All_Of_Brands()
         {
             return CarBrandManager.GetListOfAllCarBrands();
         }
-        /// <summary>
-        /// GET method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/carprofile/ + ID &#xD;
-        /// </summary>
-        /// <param name="ID">Brand_ID</param>
-        /// <returns>Return specyfic car brand or null</returns>
+
         [HttpGet]
-        public Car_Brands Get_Brand(int ID)
+        [Route("api/carbrands/5")]
+        public Car_Brands Get_Brand(int id)
         {
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            return db.Car_Brands.FirstOrDefault(car => car.Brand_ID == ID);
+            return CarBrandManager.GetCarBrandById(id);
         }
         /// <summary>
         /// POST method &#xD;

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
+using ITAPP_CarWorkshopService.ModelsManager;
 
 /// <summary>
 /// Controller
@@ -16,17 +17,10 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
     /// </summary>
     public class CarBrandsController : ApiController
     {
-        /// <summary>
-        /// <![CDATA[GET method
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/carprofile &#xD;
-        /// ]]>
-        /// </summary>
-        /// <returns>Returns list of all Car_brands or null if there is any of Car brands</returns>
         [HttpGet]
         public List<Car_Brands> Get_All_Of_Brands()
         {
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            return db.Car_Brands.ToList();
+            return CarBrandManager.GetListOfAllCarBrands();
         }
         /// <summary>
         /// GET method &#xD;

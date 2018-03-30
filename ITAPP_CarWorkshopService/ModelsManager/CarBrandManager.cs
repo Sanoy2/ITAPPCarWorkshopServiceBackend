@@ -148,6 +148,51 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return result;
         }
 
+        private static string AdjustCarBrandName(string oldString)
+        {
+            string newString;
+            newString = oldString;
+            newString = RemoveSpaces(newString);
+            newString = MakeFirstLetterUppercaseTheRestLowercase(newString);
+            return newString;
+        }
+
+        private static string RemoveSpaces(string oldString)
+        {
+            string newString;
+
+            newString = RemoveSpacesFromTheBegining(oldString);
+            newString = RemoveSpacesFromTheEnd(newString);
+
+            return newString;
+        }
+
+        private static string RemoveSpacesFromTheBegining(string oldString)
+        {
+            string newString;
+            newString = oldString;
+
+            while (newString.StartsWith(" ") && newString.Length > 0)
+            {
+                newString = newString.Substring(1);
+            }
+
+            return newString;
+        }
+
+        private static string RemoveSpacesFromTheEnd(string oldString)
+        {
+            string newString;
+            newString = oldString;
+
+            while (newString.EndsWith(" ") && newString.Length > 0)
+            {
+                newString = newString.Substring(0, newString.Length - 1);
+            }
+
+            return newString;
+        }
+
         private static string MakeFirstLetterUppercaseTheRestLowercase(string oldString)
         {
             if (oldString.Length == 0)

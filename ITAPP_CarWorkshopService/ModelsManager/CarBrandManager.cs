@@ -41,7 +41,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             string result = "";
 
-            carBrand.Brand_Name = MakeFirstLetterUppercaseTheRestLowercase(carBrand.Brand_Name);
+            carBrand.Brand_Name = AdjustCarBrandName(carBrand.Brand_Name);
 
             mutex.WaitOne();
 
@@ -67,7 +67,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             string result = "";
 
-            carBrand.Brand_Name = MakeFirstLetterUppercaseTheRestLowercase(carBrand.Brand_Name);
+            carBrand.Brand_Name = AdjustCarBrandName(carBrand.Brand_Name);
 
             mutex.WaitOne();
 
@@ -122,7 +122,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         private static bool CheckIfCarBrandAlreadyExsistsInDB(string carBrandName)
         {
             bool result = false;
-            carBrandName = MakeFirstLetterUppercaseTheRestLowercase(carBrandName);
+            carBrandName = AdjustCarBrandName(carBrandName);
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
@@ -152,63 +152,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             string newString;
             newString = oldString;
-            newString = RemoveSpaces(newString);
-            newString = MakeFirstLetterUppercaseTheRestLowercase(newString);
-            return newString;
-        }
-
-        private static string RemoveSpaces(string oldString)
-        {
-            string newString;
-
-            newString = RemoveSpacesFromTheBegining(oldString);
-            newString = RemoveSpacesFromTheEnd(newString);
-
-            return newString;
-        }
-
-        private static string RemoveSpacesFromTheBegining(string oldString)
-        {
-            string newString;
-            newString = oldString;
-
-            while (newString.StartsWith(" ") && newString.Length > 0)
-            {
-                newString = newString.Substring(1);
-            }
-
-            return newString;
-        }
-
-        private static string RemoveSpacesFromTheEnd(string oldString)
-        {
-            string newString;
-            newString = oldString;
-
-            while (newString.EndsWith(" ") && newString.Length > 0)
-            {
-                newString = newString.Substring(0, newString.Length - 1);
-            }
-
-            return newString;
-        }
-
-        private static string MakeFirstLetterUppercaseTheRestLowercase(string oldString)
-        {
-            if (oldString.Length == 0)
-            {
-                return oldString;
-            }
-
-            string newString = oldString;
-
-            newString = newString.ToLower();
-
-            string firstLetter = newString.Substring(0, 1);
-            firstLetter = firstLetter.ToUpper();
-
-            newString = newString.Replace(newString[0], firstLetter[0]);
-
+            newString = StringAdjustment.RemoveSpaces(newString);
+            newString = StringAdjustment.MakeFirstLetterUppercaseTheRestLowercase(newString);
             return newString;
         }
     }

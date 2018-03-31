@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
 using ITAPP_CarWorkshopService.ResonseClass;
+using ITAPP_CarWorkshopService.ModelsManager;
 /// <summary>
 /// Controller
 /// </summary>
@@ -25,8 +26,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         [HttpGet]
         public User Get_User(int ID)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-                return db.Users.FirstOrDefault(p => p.User_ID == ID);
+            return UserManager.GetUser(ID);
         }
         /// <summary>
         /// POST method &#xD;

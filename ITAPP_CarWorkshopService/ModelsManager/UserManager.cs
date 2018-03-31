@@ -11,23 +11,44 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
+        public static User GetUser(int userId)
+        {
+            if (!CheckIfUserExists(userId))
+            {
+                throw NoUserOfGivenId(userId);
+            }
+
+            mutex.WaitOne();
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            User user = db.Users.FirstOrDefault(n => n.User_ID == userId);
+            mutex.ReleaseMutex();
+
+            user.User_password = "******";
+
+            return user;
+        }
+
+        public static string RegisterUser(User user)
+        {
+            user.User_email = user.User_email.ToLower();
+
+        }
+
         public static string Login(User user)
         {
-            User User;
             string email = user.User_email.ToLower();
             string password = user.User_password;
 
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                mutex.WaitOne();
-                User = db.Users.FirstOrDefault(record => record.User_email.ToLower() == email);
-                mutex.ReleaseMutex();
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            if (User == null)
+            if (!CheckIfUserExists(user.User_email))
             {
                 throw NoUserOfGivenEmail(email);
             }
+
+            mutex.WaitOne();
+            User User = db.Users.FirstOrDefault(record => record.User_email.ToLower() == email);
+            mutex.ReleaseMutex();
 
             if (User.User_password.Equals(password))
             {
@@ -50,6 +71,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             if (User == null)
             {
+                mutex.ReleaseMutex();
                 throw NoUserOfGivenId(userId);
             }
 
@@ -60,6 +82,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
             else
             {
+                mutex.ReleaseMutex();
                 throw WrongPassword(userId);
             }
 
@@ -90,10 +113,10 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             User User;
             email = email.ToLower();
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
-            }
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
+
 
             if (User == null)
             {
@@ -116,21 +139,31 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return userId;
         }
 
-        public static bool CheckIfUserExistsByID(int userId)
+        private static bool CheckIfUserExists(int userId)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            if(db.Users.Any(user => user.User_ID == userId))
             {
-                mutex.WaitOne();
-                User User = db.Users.FirstOrDefault(user => user.User_ID == userId);
-                mutex.ReleaseMutex();
-                if (User == null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private static bool CheckIfUserExists(string userEmail)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            if (db.Users.Any(user => user.User_email == userEmail))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

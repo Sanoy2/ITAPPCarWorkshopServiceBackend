@@ -30,13 +30,26 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static string RegisterUser(User user)
         {
-            user.User_email = user.User_email.ToLower();
+            user.User_email = UserEmailAdjustment(user.User_email);
 
+            if(CheckIfUserExists(user.User_email))
+            {
+                return "User of given email already exists.";
+            }
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+            db.Users.Add(user);
+            db.SaveChanges();
+            mutex.ReleaseMutex();
+
+            return "User was registered.";
         }
 
         public static string Login(User user)
         {
-            string email = user.User_email.ToLower();
+            string email = UserEmailAdjustment(user.User_email);
             string password = user.User_password;
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
@@ -93,37 +106,18 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             int userId;
             Token token;
-            string result;
+            email = UserEmailAdjustment(email);
 
-            try
-            {
-                userId = GetUserIdByUserEmailPrivate(email);
-                token = new Token(userId);
-                token.RegisterToken();
-                result = token.TokenString;
-                return result;
-            }
-            catch (Exception)
-            {
-                throw NoUserOfGivenEmail(email);
-            }
-        }
-
-        private static int GetUserIdByUserEmailPrivate(string email)
-        {
-            User User;
-            email = email.ToLower();
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-
-            User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
-
-
-            if (User == null)
+            if (!CheckIfUserExists(email))
             {
                 throw NoUserOfGivenEmail(email);
             }
 
-            return User.User_ID;
+            userId = GetUserIdByUserEmailPrivate(email);
+            token = new Token(userId);
+            token.RegisterToken();
+            string result = token.TokenString;
+            return result;
         }
 
         public static int GetUserIdByUserEmail(string email)
@@ -139,11 +133,28 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return userId;
         }
 
+        private static int GetUserIdByUserEmailPrivate(string email)
+        {
+            User User;
+            email = UserEmailAdjustment(email);
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            User = db.Users.FirstOrDefault(user => user.User_email.ToLower() == email);
+
+
+            if (User == null)
+            {
+                throw NoUserOfGivenEmail(email);
+            }
+
+            return User.User_ID;
+        }
+
         private static bool CheckIfUserExists(int userId)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            if(db.Users.Any(user => user.User_ID == userId))
+            if (db.Users.Any(user => user.User_ID == userId))
             {
                 return true;
             }
@@ -156,6 +167,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         private static bool CheckIfUserExists(string userEmail)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            userEmail = UserEmailAdjustment(userEmail);
 
             if (db.Users.Any(user => user.User_email == userEmail))
             {
@@ -205,6 +218,14 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             exceptionMessage += ".";
             Exception exception = new Exception(exceptionMessage);
             return exception;
+        }
+
+        private static string UserEmailAdjustment(string oldString)
+        {
+            string newString = oldString;
+            newString = StringAdjustment.RemoveSpaces(newString);
+            newString = newString.ToLower();
+            return newString;
         }
     }
 }

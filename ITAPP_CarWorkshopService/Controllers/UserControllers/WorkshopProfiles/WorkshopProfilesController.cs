@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
+using ITAPP_CarWorkshopService.ModelsManager;
 /// <summary>
 /// Controller
 /// </summary>
@@ -24,10 +25,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
         [HttpGet]
         public Workshop_Profiles Get_Workshop_by_ID([FromUri] int ID)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                    return db.Workshop_Profiles.FirstOrDefault(p => p.Workshop_ID == ID);
-            }
+            return WorkshopProfileManager.GetWorkshopProfile(ID);
         }
         /// <summary>
         /// POST method &#xD;

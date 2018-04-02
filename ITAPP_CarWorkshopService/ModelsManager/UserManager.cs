@@ -17,6 +17,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             if (!CheckIfUserExists(userId))
             {
+                mutex.ReleaseMutex();
                 throw NoUserOfGivenId(userId);
             }
 

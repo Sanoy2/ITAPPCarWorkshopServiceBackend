@@ -21,20 +21,6 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             return response;
         }
         
-        [HttpPut]
-        [AuthorizationFilter]
-        [Route("api/login")]
-        public Response_String ChangePassword(string oldPass, string newPass)
-        { 
-            int userId = Authorization.Token.GetUserIdFromRequestHeader(Request);
-
-            UserManager.ChangePassword(userId, oldPass, newPass);
-
-            var response = new Response_String();
-            response.Response = "Probably changed";
-            return response;
-        }
-
         [HttpDelete]
         [AuthorizationFilter]
         [Route("api/login")]

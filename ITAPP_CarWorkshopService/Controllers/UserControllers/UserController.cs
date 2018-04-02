@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Threading.Tasks;
 using ITAPP_CarWorkshopService.ResonseClass;
+using ITAPP_CarWorkshopService.ModelsManager;
+using ITAPP_CarWorkshopService.Authorization;
 /// <summary>
 /// Controller
 /// </summary>
@@ -25,36 +27,31 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         [HttpGet]
         public User Get_User(int ID)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
-                return db.Users.FirstOrDefault(p => p.User_ID == ID);
+            return UserManager.GetUser(ID);
         }
         /// <summary>
         /// POST method &#xD;
         /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user &#xD;
         /// User_ID is automaticly incremented so as a User_ID = "" &#xD;
         /// </summary>
-        /// <param name="New_User">
+        /// <param name="NewUser">
         /// {
         ///     User_email =, &#xD;
         ///     User_ID =, &#xD;
         ///     User_password =, &#xD;
         /// }
         /// </param>
-        /// <returns>Returns JSON with { Response : string }, string countains : "Item was added" or "Item already exists"</returns>
+        /// <returns>Returns JSON with { Response : string }
+        /// </returns>
         [HttpPost]
-        public Response_String Add_User([FromBody] User New_User)
+        public Response_String RegisterUser([FromBody] User NewUser)
         {
-            using (var db = new ITAPPCarWorkshopServiceDBEntities())
+            Response_String response = new Response_String()
             {
-                var User = db.Users.FirstOrDefault(user => user.User_email == New_User.User_email);
-                if (User != null)
-                {
-                    return new Response_String() { Response = "Item already exists" };
-                }
-                db.Users.Add(New_User);
-                db.SaveChanges();
-                return new Response_String() { Response = "Item was added" };
-            }
+                Response = UserManager.RegisterUser(NewUser)
+            };
+
+            return response;
         }
         /// <summary>
         /// PUT method &#xD;
@@ -69,6 +66,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         /// }</param>
         /// <returns>Returns JSON with { Response : string }, string countains : "Item was modify" , "Item already exists" or "Item does not exsists"</returns>
         [HttpPut]
+        [AuthorizationFilter]
         public Response_String Update_User([FromBody]User User)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
@@ -97,6 +95,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         /// <param name="ID">User_ID</param>
         /// <returns>Returns JSON with { Response : string }, string countains : "Item was removed" or "Item does not exsists"</returns>
         [HttpDelete]
+        [AuthorizationFilter]
         public Response_String Delete_User(int ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())

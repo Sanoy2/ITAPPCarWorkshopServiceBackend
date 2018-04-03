@@ -27,6 +27,9 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         private static bool CheckIfCommentCanBeAdded(Workshop_Comments comment)
         {
+            // TODO:
+            // Check if there is any sense in here
+            // I have no idea if it works correctly xD
             var mustBeOlderThat = DateTime.Now.AddDays(-minTimeBetweenCommentsInDays);
 
             var db = new ITAPPCarWorkshopServiceDBEntities();

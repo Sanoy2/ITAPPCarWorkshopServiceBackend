@@ -15,7 +15,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             mutex.WaitOne();
 
-            if (!CheckIfUserExists(userId))
+            if (!CheckIfUserExistsPrivate(userId))
             {
                 throw NoUserOfGivenId(userId);
             }
@@ -33,7 +33,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             user.User_email = UserEmailAdjustment(user.User_email);
 
-            if(CheckIfUserExists(user.User_email))
+            if(CheckIfUserExistsPrivate(user.User_email))
             {
                 return "User of given email already exists.";
             }
@@ -55,7 +55,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            if (!CheckIfUserExists(user.User_email))
+            if (!CheckIfUserExistsPrivate(user.User_email))
             {
                 mutex.ReleaseMutex();
                 throw NoUserOfGivenEmail(user.User_email);
@@ -95,7 +95,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             Token token;
             email = UserEmailAdjustment(email);
 
-            if (!CheckIfUserExists(email))
+            if (!CheckIfUserExistsPrivate(email))
             {
                 throw NoUserOfGivenEmail(email);
             }
@@ -137,14 +137,36 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return User.User_ID;
         }
 
-        private static bool CheckIfUserExists(int userId)
+        public static bool CheckIfUserExists(int userId)
+        {
+            mutex.WaitOne();
+
+            bool result = CheckIfUserExistsPrivate(userId);
+
+            mutex.ReleaseMutex();
+
+            return result;
+        }
+
+        public static bool CheckIfUserExists(string userEmail)
+        {
+            mutex.WaitOne();
+
+            bool result = CheckIfUserExistsPrivate(userEmail);
+
+            mutex.ReleaseMutex();
+
+            return result;
+        }
+
+        private static bool CheckIfUserExistsPrivate(int userId)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             return db.Users.Any(user => user.User_ID == userId);
         }
 
-        private static bool CheckIfUserExists(string userEmail)
+        private static bool CheckIfUserExistsPrivate(string userEmail)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 

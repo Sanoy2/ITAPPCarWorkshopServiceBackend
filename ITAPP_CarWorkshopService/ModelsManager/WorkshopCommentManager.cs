@@ -11,6 +11,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
+        private static readonly int minTimeBetweenCommentsInDays = 30;
+
         public static void AddComment(Workshop_Comments newComment)
         {
             // TODO:
@@ -21,6 +23,29 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             // return the result
 
             // remember about mutex
+        }
+
+        private static bool CheckIfCommentCanBeAdded(Workshop_Comments comment)
+        {
+            var mustBeOlderThat = DateTime.Now.AddDays(-minTimeBetweenCommentsInDays);
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            if(!db.Workshop_Comments.Any(n => n.Workshop_ID == comment.Workshop_ID && n.Client_ID == comment.Client_ID))
+            {
+                return true;
+            }
+           
+            var list = db.Workshop_Comments.Where(n => n.Workshop_ID == comment.Workshop_ID && n.Client_ID == comment.Client_ID).OrderByDescending(n => n.Comment_date).ToList();
+
+            var lastCommentDate = list.First().Comment_date;
+
+            if(lastCommentDate < mustBeOlderThat)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static void DeleteComment(int commentId)

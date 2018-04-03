@@ -11,6 +11,28 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
+        public static void AddComment(Workshop_Comments newComment)
+        {
+            // TODO:
+            // check if the user has already added a comment of the workshop in last XXX hours/days/weeks/months - method - may throw exception
+            // check if user exists - method from user manager - may throw exception
+            // check if workshop exists - method from workshop profile manager - may throw exception
+            // add a new comment to DB
+            // return the result
+
+            // remember about mutex
+        }
+
+        public static void DeleteComment(int commentId)
+        {
+            // TODO:
+            // check if a comment exists - method - may throw exception
+            // delete a comment
+            // return the result
+
+            // remember about mutex
+        }
+
         public static List<Workshop_Comments> GetAllComments()
         {
             mutex.WaitOne();

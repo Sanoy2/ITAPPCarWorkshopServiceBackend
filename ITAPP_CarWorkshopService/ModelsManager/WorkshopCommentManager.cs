@@ -11,14 +11,30 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
-        public static double GetAvarageRating(Workshop_Profiles workshop)
+        public static List<Workshop_Comments> GetAllComments()
         {
             mutex.WaitOne();
-            double result = GetAvarageRatingPrivate(workshop.Workshop_ID);
-            mutex.ReleaseMutex();
+            var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            return result;
+            List<Workshop_Comments> list = null;
+            list = db.Workshop_Comments.OrderByDescending(n => n.Comment_date).ToList();
+
+            mutex.ReleaseMutex();
+            return list;
         }
+
+        public static List<Workshop_Comments> GetComments(int workshopId)
+        {
+            mutex.WaitOne();
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            List<Workshop_Comments> list = null;
+            list = db.Workshop_Comments.Where(n => n.Workshop_ID == workshopId).OrderByDescending(n => n.Comment_date).ToList();
+
+            mutex.ReleaseMutex();
+            return list;
+        }
+
 
         public static double GetAvarageRating(int workshopId)
         {

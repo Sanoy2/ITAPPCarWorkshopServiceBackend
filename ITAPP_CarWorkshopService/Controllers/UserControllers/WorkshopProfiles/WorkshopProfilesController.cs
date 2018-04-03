@@ -25,7 +25,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
         [HttpGet]
         public Workshop_Profiles Get_Workshop_by_ID([FromUri] int ID)
         {
-            return WorkshopProfileManager.GetWorkshopProfile(ID);
+            return WorkshopProfileManager.GetWorkshopProfileById(ID);
         }
         /// <summary>
         /// POST method &#xD;

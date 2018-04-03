@@ -16,7 +16,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         /// <param name="workshopId"></param>
         /// <returns>Return workshop profile od specified ID</returns>
         /// <remarks>Throws an exception if does not find any profile with specified ID</remarks>
-        public static Workshop_Profiles GetWorkshopProfile(int workshopId)
+        public static Workshop_Profiles GetWorkshopProfileById(int workshopId)
         {
             mutex.WaitOne();
 
@@ -28,10 +28,42 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
             Workshop_Profiles workshop = db.Workshop_Profiles.FirstOrDefault(n => n.Workshop_ID == workshopId);
+
+            CountAverageRating(workshop);
+
+            db.SaveChanges();
+
             mutex.ReleaseMutex();
 
             return workshop;
         }
+
+        public static List<Workshop_Profiles> GetWorkshopProfilesByCity(string city)
+        {
+            mutex.WaitOne();
+
+            if (!CheckIfWorkshopProfileExistsByCity(city))
+            {
+                mutex.ReleaseMutex();
+                throw NoWorkshopOfGivenCity(city);
+            }
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Equals(city)).ToList();
+
+            foreach (var item in list)
+            {
+                CountAverageRating(item);
+            }
+
+            db.SaveChanges();
+
+            mutex.ReleaseMutex();
+
+            return list;
+        }
+
+        private static double CountAverageRating(Workshop_Profiles workshop) => 0.0d;
 
         private static bool CheckIfWorkshopProfileExists(int workshopId)
         {
@@ -40,11 +72,18 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return db.Workshop_Profiles.Any(workshop => workshop.Workshop_ID == workshopId);
         }
 
-        private static bool CheckIfWorkshopProfileExists(string NIP)
+        private static bool CheckIfWorkshopProfileExistsByNIP(string NIP)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_NIP == NIP);
+            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_NIP.Equals(NIP));
+        }
+
+        private static bool CheckIfWorkshopProfileExistsByCity(string city)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_address_city.Equals(city));
         }
 
         private static Exception NoWorkshopOfGivenId(int workshopId)
@@ -53,6 +92,15 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             exceptionMessage = "Workshop with id: ";
             exceptionMessage += workshopId;
             exceptionMessage += " does not exists.";
+            Exception exception = new Exception(exceptionMessage);
+            return exception;
+        }
+
+        private static Exception NoWorkshopOfGivenCity(string city)
+        {
+            string exceptionMessage;
+            exceptionMessage = "There are no any workshop in city: ";
+            exceptionMessage += city;
             Exception exception = new Exception(exceptionMessage);
             return exception;
         }

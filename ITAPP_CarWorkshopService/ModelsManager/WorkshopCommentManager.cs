@@ -33,6 +33,18 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             // remember about mutex
         }
 
+        public static void EditComment(Workshop_Comments editedComment)
+        {
+            // TODO:
+            // check if the comment exists - method - may throw exception
+            // get the comment to be edited
+            // edit the comment to be edited
+            // save changes to DB
+            // return the result
+            
+            // remember about mutex
+        }
+
         public static List<Workshop_Comments> GetAllComments()
         {
             mutex.WaitOne();

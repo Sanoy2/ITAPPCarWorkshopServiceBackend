@@ -11,6 +11,54 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
+        public static List<Workshop_Profiles> GetWorkshopsByCityAndName(string city, string name)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            city = PrepareToCompare(city);
+            name = PrepareToCompare(name);
+
+            mutex.WaitOne();
+
+            var list = db.Workshop_Profiles.Where(n => DoesItFit(n, city, name)).ToList();
+
+            mutex.ReleaseMutex();
+
+            return list;
+        }
+
+        private static bool DoesItFit(Workshop_Profiles workshop, string city, string name)
+        {
+            bool valid = false;
+
+            string workshopCity;
+            string workshopName;
+
+            workshopCity = PrepareToCompare(workshop.Workshop_address_city);
+            workshopName = PrepareToCompare(workshop.Workshop_name);
+
+            if(workshopCity.Equals(city))
+            {
+                valid = DoesNameFit(workshopName, name);
+            }
+
+            return valid;
+        }
+
+        private static bool DoesNameFit(string workshopName, string name)
+        {
+            workshopName = PrepareToCompare(workshopName);
+
+            if (workshopName.Equals(name) || workshopName.Contains(name))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static List<CityAndZipCode> GetAllCitiesAndZipCodes()
         {
             List<CityAndZipCode> ListOfCitiesAndZipCodes = new List<CityAndZipCode>();
@@ -63,46 +111,19 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static List<Workshop_Profiles> GetWorkshopProfilesByCity(string city)
         {
-            city = StringAdjustment.RemoveSpaces(city);
-            city = StringAdjustment.MakeFirstLetterUppercaseTheRestLowercase(city);
+            city = PrepareToCompare(city);
 
             mutex.WaitOne();
 
             if (!CheckIfWorkshopProfileExistsByCity(city))
             {
                 mutex.ReleaseMutex();
-                throw NoWorkshopOfGivenCity(city);
+                //throw NoWorkshopOfGivenCity(city);
+                return new List<Workshop_Profiles>();
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Equals(city)).ToList();
-
-            foreach (var item in list)
-            {
-                CountAverageRating(item);
-            }
-
-            db.SaveChanges();
-
-            mutex.ReleaseMutex();
-
-            return list;
-        }
-
-        public static List<Workshop_Profiles> GetWorkshopProfilesByName(string name)
-        {
-            name = StringAdjustment.RemoveSpaces(name);
-
-            mutex.WaitOne();
-
-            if (!CheckIfWorkshopProfileExistsByName(name))
-            {
-                mutex.ReleaseMutex();
-                throw NoWorkshopOfGivenName(name);
-            }
-
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            var list = db.Workshop_Profiles.Where(n => n.Workshop_name.Equals(name)).ToList();
+            var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.ToLower().Equals(city)).ToList();
 
             foreach (var item in list)
             {
@@ -129,6 +150,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
+            NIP = PrepareToCompare(NIP);
+
             return db.Workshop_Profiles.Any(workshop => workshop.Workshop_NIP.Equals(NIP));
         }
 
@@ -136,14 +159,18 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_address_city.Equals(city));
+            city = PrepareToCompare(city);
+
+            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_address_city.ToLower().Equals(city));
         }
 
         private static bool CheckIfWorkshopProfileExistsByName(string name)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_name.Equals(name));
+            name = PrepareToCompare(name);
+
+            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_name.ToLower().Equals(name));
         }
 
         private static Exception NoWorkshopOfGivenId(int workshopId)
@@ -172,6 +199,13 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             exceptionMessage += name;
             Exception exception = new Exception(exceptionMessage);
             return exception;
+        }
+
+        private static string PrepareToCompare(string text)
+        {
+            text = StringAdjustment.RemoveSpaces(text);
+            text = text.ToLower();
+            return text;
         }
     }
 }

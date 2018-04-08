@@ -36,12 +36,11 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
         {
             return WorkshopProfileManager.GetAllCitiesAndZipCodes();
         }
-        
+
         [HttpGet]
-        [Route("api/workshopprofiles/name/{name}")]
-        public List<Workshop_Profiles> GetWorkshopsByName(string name)
+        public List<Workshop_Profiles> GetWorkshopsByNameAndCity([FromUri] string city, [FromUri] string name)
         {
-            return WorkshopProfileManager.GetWorkshopProfilesByName(name);
+            return WorkshopProfileManager.GetWorkshopsByCityAndName(city, name);
         }
 
         /// <summary>

@@ -124,6 +124,7 @@
           <Property Name="Workshop_URL" Type="text" />
           <Property Name="Workshop_logo_URL" Type="text" />
           <Property Name="Workshop_average_rating" Type="float" />
+          <Property Name="Workshop_name" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -523,6 +524,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <NavigationProperty Name="Workshop_Comments" Relationship="Self.FK__Workshop___Works__09A971A2" FromRole="Workshop_Profiles" ToRole="Workshop_Comments" />
           <NavigationProperty Name="Workshop_Employees" Relationship="Self.FK__Workshop___Works__02FC7413" FromRole="Workshop_Profiles" ToRole="Workshop_Employees" />
           <NavigationProperty Name="Workshop_Opening_Hours" Relationship="Self.FK__Workshop___Works__151B244E" FromRole="Workshop_Profiles" ToRole="Workshop_Opening_Hours" />
+          <Property Name="Workshop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="database_firewall_rules">
           <Key>
@@ -885,6 +887,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <EntitySetMapping Name="Workshop_Profiles">
             <EntityTypeMapping TypeName="ITAPPCarWorkshopServiceDBModel.Workshop_Profiles">
               <MappingFragment StoreEntitySet="Workshop_Profiles">
+                <ScalarProperty Name="Workshop_name" ColumnName="Workshop_name" />
                 <ScalarProperty Name="Workshop_ID" ColumnName="Workshop_ID" />
                 <ScalarProperty Name="Workshop_NIP" ColumnName="Workshop_NIP" />
                 <ScalarProperty Name="Workshop_address_city" ColumnName="Workshop_address_city" />

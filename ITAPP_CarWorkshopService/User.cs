@@ -20,6 +20,7 @@ namespace ITAPP_CarWorkshopService
             this.Workshop_Employees = new HashSet<Workshop_Employees>();
             this.Client_Profiles = new HashSet<Client_Profiles>();
         }
+    
         public int User_ID { get; set; }
         public string User_email { get; set; }
         public string User_password { get; set; }

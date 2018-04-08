@@ -7,6 +7,31 @@ namespace ITAPP_CarWorkshopService
 {
     public static class StringAdjustment
     {
+        public static bool ZipCodeValidate(string zipCode)
+        {
+            if(zipCode.Length != 6)
+            {
+                return false;
+            }
+
+            if(!zipCode[2].Equals('-'))
+            {
+                return false;
+            }
+
+            for (int i = 0; i < zipCode.Length; i++)
+            {
+                if (i == 2)
+                    continue;
+                
+                if(!Char.IsNumber(zipCode[i]))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// Makes all letters lowercase but the first letter uppercase
         /// </summary>

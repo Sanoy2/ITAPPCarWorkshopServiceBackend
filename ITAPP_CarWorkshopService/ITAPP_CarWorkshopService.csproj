@@ -156,6 +156,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdditionalModels\CityAndZipCode.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -245,6 +246,7 @@
     </Compile>
     <Compile Include="ModelsManager\CarBrandManager.cs" />
     <Compile Include="ModelsManager\UserManager.cs" />
+    <Compile Include="ModelsManager\WorkshopProfileManager.cs" />
     <Compile Include="ModelsManager\WorkshopCommentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResonseClass\Response_Class.cs" />

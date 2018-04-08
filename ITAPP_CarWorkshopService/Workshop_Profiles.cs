@@ -35,6 +35,7 @@ namespace ITAPP_CarWorkshopService
         public string Workshop_URL { get; set; }
         public string Workshop_logo_URL { get; set; }
         public Nullable<double> Workshop_average_rating { get; set; }
+        public string Workshop_name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Car_Services> Car_Services { get; set; }

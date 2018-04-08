@@ -11,43 +11,81 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
+        private static int minimumCityLength = 3;
+        private static int minimumNameLength = 3;
+
+        private delegate bool DoesItFit(Workshop_Profiles workshop, string city, string name);
+
         public static List<Workshop_Profiles> GetWorkshopsByCityAndName(string city, string name)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            city = PrepareToCompare(city);
-            name = PrepareToCompare(name);
+            DoesItFit doesItFit = ChooseFitingMethod(city, name);
 
             mutex.WaitOne();
 
-            var list = db.Workshop_Profiles.Where(n => DoesItFit(n, city, name)).ToList();
+            var list = db.Workshop_Profiles.Where(n => doesItFit(n, city, name)).ToList();
 
             mutex.ReleaseMutex();
 
             return list;
         }
 
-        private static bool DoesItFit(Workshop_Profiles workshop, string city, string name)
+        private static DoesItFit ChooseFitingMethod(string city, string name)
         {
-            bool valid = false;
-
-            string workshopCity;
-            string workshopName;
-
-            workshopCity = PrepareToCompare(workshop.Workshop_address_city);
-            workshopName = PrepareToCompare(workshop.Workshop_name);
-
-            if(workshopCity.Equals(city))
+            if(city.Length > minimumCityLength && name.Length > minimumNameLength)
             {
-                valid = DoesNameFit(workshopName, name);
+                return DoesItFitByNameAndCity;
             }
-
-            return valid;
+            else
+            {
+                if(city.Length < minimumCityLength && name.Length > minimumNameLength)
+                {
+                    return DoesItFitByName;
+                }
+                else
+                {
+                    if(city.Length > minimumCityLength)
+                    {
+                        return DoesItFitByCity;
+                    }
+                    else
+                    {
+                        return AlwaysFalse;
+                    }
+                }
+            }
         }
 
-        private static bool DoesNameFit(string workshopName, string name)
+        private static bool AlwaysFalse(Workshop_Profiles workshop, string city, string name) => false;
+
+        private static bool DoesItFitByName(Workshop_Profiles workshop, string city, string name)
+        {
+            return CheckIfNameFitPrecisely(workshop.Workshop_name, name);
+        }
+
+        private static bool DoesItFitByCity(Workshop_Profiles workshop, string city, string name)
+        {
+            return CheckIfCityFitPrecisely(workshop.Workshop_address_city, city);
+        }
+
+        private static bool DoesItFitByNameAndCity(Workshop_Profiles workshop, string city, string name)
+        {
+            return CheckIfCityFitPrecisely(workshop.Workshop_address_city, city) && CheckIfNameFitPrecisely(workshop.Workshop_name, name);
+        }
+
+        private static bool CheckIfCityFitPrecisely(string workshopCity, string city)
+        {
+            workshopCity = PrepareToCompare(workshopCity);
+            city = PrepareToCompare(city);
+
+            return workshopCity.Equals(city);
+        }
+
+        private static bool CheckIfNameFitPrecisely(string workshopName, string name)
         {
             workshopName = PrepareToCompare(workshopName);
+            name = PrepareToCompare(name);
 
             if (workshopName.Equals(name) || workshopName.Contains(name))
             {

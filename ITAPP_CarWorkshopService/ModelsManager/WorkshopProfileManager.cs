@@ -91,6 +91,9 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static List<Workshop_Profiles> GetWorkshopProfilesByName(string name)
         {
+            name = StringAdjustment.RemoveSpaces(name);
+            name = StringAdjustment.MakeFirstLetterUppercaseTheRestLowercase(name);
+
             mutex.WaitOne();
 
             if (!CheckIfWorkshopProfileExistsByName(name))

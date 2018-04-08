@@ -63,6 +63,9 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static List<Workshop_Profiles> GetWorkshopProfilesByCity(string city)
         {
+            city = StringAdjustment.RemoveSpaces(city);
+            city = StringAdjustment.MakeFirstLetterUppercaseTheRestLowercase(city);
+
             mutex.WaitOne();
 
             if (!CheckIfWorkshopProfileExistsByCity(city))
@@ -73,6 +76,31 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
             var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Equals(city)).ToList();
+
+            foreach (var item in list)
+            {
+                CountAverageRating(item);
+            }
+
+            db.SaveChanges();
+
+            mutex.ReleaseMutex();
+
+            return list;
+        }
+
+        public static List<Workshop_Profiles> GetWorkshopProfilesByName(string name)
+        {
+            mutex.WaitOne();
+
+            if (!CheckIfWorkshopProfileExistsByName(name))
+            {
+                mutex.ReleaseMutex();
+                throw NoWorkshopOfGivenName(name);
+            }
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            var list = db.Workshop_Profiles.Where(n => n.Workshop_name.Equals(name)).ToList();
 
             foreach (var item in list)
             {
@@ -109,6 +137,13 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return db.Workshop_Profiles.Any(workshop => workshop.Workshop_address_city.Equals(city));
         }
 
+        private static bool CheckIfWorkshopProfileExistsByName(string name)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            return db.Workshop_Profiles.Any(workshop => workshop.Workshop_name.Equals(name));
+        }
+
         private static Exception NoWorkshopOfGivenId(int workshopId)
         {
             string exceptionMessage;
@@ -124,6 +159,15 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             string exceptionMessage;
             exceptionMessage = "There are no any workshop in city: ";
             exceptionMessage += city;
+            Exception exception = new Exception(exceptionMessage);
+            return exception;
+        }
+
+        private static Exception NoWorkshopOfGivenName(string name)
+        {
+            string exceptionMessage;
+            exceptionMessage = "There are no any workshop of given name: ";
+            exceptionMessage += name;
             Exception exception = new Exception(exceptionMessage);
             return exception;
         }

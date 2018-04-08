@@ -13,7 +13,24 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static List<CityAndZipCode> GetAllCitiesAndZipCodes()
         {
-            return new List<CityAndZipCode>();
+            List<CityAndZipCode> ListOfCitiesAndZipCodes = new List<CityAndZipCode>();
+
+            mutex.WaitOne();
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            var ListOfWorkshopProfiles = db.Workshop_Profiles.ToList();
+
+            mutex.ReleaseMutex();
+
+            foreach (var item in ListOfWorkshopProfiles)
+            {
+                ListOfCitiesAndZipCodes.Add(new CityAndZipCode(item.Workshop_address_city, item.Workshop_address_zip_code));
+            }
+
+            ListOfCitiesAndZipCodes = ListOfCitiesAndZipCodes.Distinct().ToList();
+
+            return ListOfCitiesAndZipCodes;
         }
 
         /// <summary>

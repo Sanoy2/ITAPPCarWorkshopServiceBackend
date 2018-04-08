@@ -21,5 +21,10 @@ namespace ITAPP_CarWorkshopService.AdditionalModels
             City = _city;
             ZipCode = _zipCode;
         }
+
+        public override string ToString()
+        {
+            return ZipCode + " " + City;
+        }
     }
 }

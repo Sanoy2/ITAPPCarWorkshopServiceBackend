@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
 using ITAPP_CarWorkshopService.ModelsManager;
+using ITAPP_CarWorkshopService.AdditionalModels;
 /// <summary>
 /// Controller
 /// </summary>
@@ -27,6 +28,14 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
         {
             return WorkshopProfileManager.GetWorkshopProfileById(ID);
         }
+
+        [HttpGet]
+        [Route("api/workshopcontroller/cities")]
+        public List<CityAndZipCode> GetCities()
+        {
+            return WorkshopProfileManager.GetAllCitiesAndZipCodes();
+        }
+
         /// <summary>
         /// POST method &#xD;
         /// URL : http://itappcarworkshopservice.azurewebsites.net/api/workshopprofiles/ &#xD;

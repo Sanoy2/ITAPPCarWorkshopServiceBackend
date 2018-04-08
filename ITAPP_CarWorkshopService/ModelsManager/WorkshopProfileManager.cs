@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Threading;
+using ITAPP_CarWorkshopService.AdditionalModels;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
     public static class WorkshopProfileManager
     {
         private static Mutex mutex = new Mutex();
+
+        public static List<CityAndZipCode> GetAllCitiesAndZipCodes()
+        {
+            return new List<CityAndZipCode>();
+        }
 
         /// <summary>
         /// Method to get workshop profile by its ID

@@ -12,7 +12,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
-        public static DataModels.User GetUser(int userId)
+        public static List<DataModels.UserModel> GetUser(int userId)
         {
             mutex.WaitOne();
 
@@ -23,34 +23,41 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            DataModels.User user = new DataModels.User(db.Users.FirstOrDefault(n => n.User_ID == userId));
+            DataModels.UserModel user = new DataModels.UserModel(db.Users.FirstOrDefault(n => n.User_ID == userId));
             mutex.ReleaseMutex();
 
             user.UserPassword = "******";
 
-            return user;
+            var list = new List<DataModels.UserModel>();
+            list.Add(user);
+
+            return list;
         }
 
-        public static string RegisterUser(User user)
+        public static bool RegisterUser(DataModels.UserModel UserModel)
         {
-            user.User_email = UserEmailAdjustment(user.User_email);
+            UserModel.UserEmail = UserEmailAdjustment(UserModel.UserEmail);
 
-            if(CheckIfUserExistsPrivate(user.User_email))
-            {
-                return "User of given email already exists.";
-            }
+            var UserEntity = UserModel.MakeUserEntityFromUserModel();
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            db.Users.Add(user);
+            if (CheckIfUserExistsPrivate(UserModel.UserEmail))
+            {
+                mutex.ReleaseMutex();
+                return false;
+            }
+
+            db.Users.Add(UserEntity);
             db.SaveChanges();
+
             mutex.ReleaseMutex();
 
-            return "User was registered.";
+            return true;
         }
 
-        public static string Login(DataModels.User user)
+        public static string Login(DataModels.UserModel user)
         {
             user.UserEmail = UserEmailAdjustment(user.UserEmail);
 
@@ -75,7 +82,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
         }
 
-        private static bool TryToLogIn(DataModels.User user)
+        private static bool TryToLogIn(DataModels.UserModel user)
         {
             bool result = false;
 

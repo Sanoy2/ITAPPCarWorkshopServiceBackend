@@ -13,21 +13,21 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarsFollowed
     {
 
         [HttpGet]
-        [Route("carsfollowed/byClient/{ID}")]
+        [Route("api/CarsFollowed/byClient/{ID}")]
         public List<DataModels.CarsFollowedModel> GetListOfFollowsByClientId(int ID)
         {
             return CarsFollowedManager.GetListByClientId(ID);
         }
 
         [HttpGet]
-        [Route("carsfollowed/byFollow/{ID}")]
+        [Route("api/CarsFollowed/byFollow/{ID}")]
         public List<DataModels.CarsFollowedModel> GetListOfFollowsByFollowId(int ID)
         {
             return CarsFollowedManager.GetListByFollowId(ID);
         }
 
         [HttpGet]
-        [Route("carsfollowed/byCar/{ID}")]
+        [Route("api/CarsFollowed/byCar/{ID}")]
         public List<DataModels.CarsFollowedModel> GetListOfFollowsByCarId(int ID)
         {
             return CarsFollowedManager.GetListByCarId(ID);

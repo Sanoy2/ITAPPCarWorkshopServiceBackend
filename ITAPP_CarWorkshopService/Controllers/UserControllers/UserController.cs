@@ -25,7 +25,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         /// <param name="ID">User_ID</param>
         /// <returns>Return a specyfic user with passed id or null if there is no such user</returns>
         [HttpGet]
-        public User Get_User(int ID)
+        public DataModels.User Get_User(int ID)
         {
             return UserManager.GetUser(ID);
         }

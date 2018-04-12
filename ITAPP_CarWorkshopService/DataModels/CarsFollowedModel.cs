@@ -41,5 +41,17 @@ namespace ITAPP_CarWorkshopService.DataModels
 
             return CarsFollowedEntity;
         }
+
+        public static List<DataModels.CarsFollowedModel> ListOfEntitiesToListOfModels(List<ITAPP_CarWorkshopService.Cars_followed> ListOfEntities)
+        {
+            var ListOfModels = new List<DataModels.CarsFollowedModel>();
+
+            foreach (var item in ListOfEntities)
+            {
+                ListOfModels.Add(new DataModels.CarsFollowedModel(item));
+            }
+
+            return ListOfModels;
+        }
     }
 }

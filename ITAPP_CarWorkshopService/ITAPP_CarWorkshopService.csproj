@@ -226,6 +226,7 @@
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataModels\CarsFollowedModel.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
     <Compile Include="DataModels\UserModel.cs" />
     <Compile Include="Global.asax.cs">
@@ -247,6 +248,7 @@
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
     <Compile Include="ModelsManager\CarBrandManager.cs" />
+    <Compile Include="ModelsManager\CarsFollowedManager.cs" />
     <Compile Include="ModelsManager\ClientProfileManager.cs" />
     <Compile Include="ModelsManager\UserManager.cs" />
     <Compile Include="ModelsManager\WorkshopProfileManager.cs" />

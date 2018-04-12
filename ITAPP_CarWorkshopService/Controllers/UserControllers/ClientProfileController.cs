@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
+using ITAPP_CarWorkshopService.DataModels;
+using ITAPP_CarWorkshopService.ModelsManager;
 /// <summary>
 /// Controller
 /// </summary>
@@ -35,12 +37,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         /// <param name="ID">client_ID</param>
         /// <returns>Returning selected by ID client or null if there is not client with passed id</returns>
         [HttpGet]
-        public Client_Profiles Get_Client_Profile(int ID)
+        public ClientProfile Get_Client_Profile(int ID)
         {
-            using(var db = new ITAPPCarWorkshopServiceDBEntities())
-            {
-                return db.Client_Profiles.FirstOrDefault(client => client.Client_ID == ID);
-            }
+            return ClientProfileManager.GetClientProfileById(ID);
         }
         /// <summary>
         /// POST method &#xD;

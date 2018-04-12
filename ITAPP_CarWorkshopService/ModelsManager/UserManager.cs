@@ -5,6 +5,8 @@ using System.Web;
 using System.Threading;
 using ITAPP_CarWorkshopService.Authorization;
 using ITAPP_CarWorkshopService.DataModels;
+using System.Net.Http;
+using System.Net;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -57,7 +59,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return true;
         }
 
-        public static string Login(DataModels.UserModel user)
+        public static HttpResponseMessage Login(DataModels.UserModel user)
         {
             user.UserEmail = UserEmailAdjustment(user.UserEmail);
 
@@ -67,18 +69,28 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             if (!CheckIfUserExistsPrivate(user.UserEmail))
             {
                 mutex.ReleaseMutex();
-                throw NoUserOfGivenEmail(user.UserEmail);
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("Account of given email address does not exists.");
+
+                return response;
             }
     
             if(TryToLogIn(user))
             {
                 mutex.ReleaseMutex();
-                return GenerateTokenForUser(user.UserEmail);
+
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent(GenerateTokenForUser(user.UserEmail));
+
+                return response;
             }
             else
             {
                 mutex.ReleaseMutex();
-                throw WrongPassword(user.UserEmail);
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("Wrong password");
+
+                return response;
             }
         }
 
@@ -181,7 +193,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             userEmail = UserEmailAdjustment(userEmail);
 
-            return db.Users.Any(user => user.User_email == userEmail);
+            return db.Users.Any(user => user.User_email.ToLower().Equals(userEmail));
         }
 
         private static Exception NoUserOfGivenEmail(string email)

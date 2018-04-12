@@ -50,38 +50,38 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return "User was registered.";
         }
 
-        public static string Login(User user)
+        public static string Login(DataModels.User user)
         {
-            user.User_email = UserEmailAdjustment(user.User_email);
+            user.UserEmail = UserEmailAdjustment(user.UserEmail);
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            if (!CheckIfUserExistsPrivate(user.User_email))
+            if (!CheckIfUserExistsPrivate(user.UserEmail))
             {
                 mutex.ReleaseMutex();
-                throw NoUserOfGivenEmail(user.User_email);
+                throw NoUserOfGivenEmail(user.UserEmail);
             }
     
             if(TryToLogIn(user))
             {
                 mutex.ReleaseMutex();
-                return GenerateTokenForUser(user.User_email);
+                return GenerateTokenForUser(user.UserEmail);
             }
             else
             {
                 mutex.ReleaseMutex();
-                throw WrongPassword(user.User_email);
+                throw WrongPassword(user.UserEmail);
             }
         }
 
-        private static bool TryToLogIn(User user)
+        private static bool TryToLogIn(DataModels.User user)
         {
             bool result = false;
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            result = db.Users.Any(n => n.User_email == user.User_email && n.User_password == user.User_password);
+            result = db.Users.Any(n => n.User_email.Equals(user.UserEmail) && n.User_password.Equals(user.UserPassword));
 
             return result;
         }

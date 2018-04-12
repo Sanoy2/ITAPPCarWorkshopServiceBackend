@@ -226,6 +226,8 @@
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataModels\CarBrandModel.cs" />
+    <Compile Include="DataModels\CarProfileModel.cs" />
     <Compile Include="DataModels\CarsFollowedModel.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
     <Compile Include="DataModels\UserModel.cs" />

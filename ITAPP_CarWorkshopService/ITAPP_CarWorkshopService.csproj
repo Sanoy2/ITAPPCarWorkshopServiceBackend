@@ -250,6 +250,7 @@
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
     <Compile Include="ModelsManager\CarBrandManager.cs" />
+    <Compile Include="ModelsManager\CarProfileManager.cs" />
     <Compile Include="ModelsManager\CarsFollowedManager.cs" />
     <Compile Include="ModelsManager\ClientProfileManager.cs" />
     <Compile Include="ModelsManager\UserManager.cs" />

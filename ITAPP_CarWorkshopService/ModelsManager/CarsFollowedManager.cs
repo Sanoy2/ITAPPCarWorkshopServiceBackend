@@ -98,7 +98,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             {
                 mutex.ReleaseMutex();
 
-                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
                 response.Content = new StringContent("Something gone wrong while adding follow to DB.");
 
                 return response;

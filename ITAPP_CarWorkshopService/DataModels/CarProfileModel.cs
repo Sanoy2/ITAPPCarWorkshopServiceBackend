@@ -54,7 +54,7 @@ namespace ITAPP_CarWorkshopService.DataModels
             return CarProfileEntity;
         }
 
-        public List<DataModels.CarProfileModel> ListOfEntityToListOfModels(List<ITAPP_CarWorkshopService.Car_Profiles> ListOfEntities)
+        public static List<DataModels.CarProfileModel> ListOfEntityToListOfModels(List<ITAPP_CarWorkshopService.Car_Profiles> ListOfEntities)
         {
             var ListOfModels = new List<DataModels.CarProfileModel>();
 

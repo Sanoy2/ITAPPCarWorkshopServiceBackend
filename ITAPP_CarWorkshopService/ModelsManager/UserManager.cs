@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Threading;
 using ITAPP_CarWorkshopService.Authorization;
+using ITAPP_CarWorkshopService.DataModels;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -11,7 +12,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
-        public static User GetUser(int userId)
+        public static DataModels.User GetUser(int userId)
         {
             mutex.WaitOne();
 
@@ -22,10 +23,10 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            User user = db.Users.FirstOrDefault(n => n.User_ID == userId);
+            DataModels.User user = new DataModels.User(db.Users.FirstOrDefault(n => n.User_ID == userId));
             mutex.ReleaseMutex();
 
-            user.User_password = "******";
+            user.UserPassword = "******";
 
             return user;
         }

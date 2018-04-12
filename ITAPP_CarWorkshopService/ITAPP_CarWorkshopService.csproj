@@ -227,6 +227,7 @@
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
     <Compile Include="DataModels\ClientProfile.cs" />
+    <Compile Include="DataModels\User.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

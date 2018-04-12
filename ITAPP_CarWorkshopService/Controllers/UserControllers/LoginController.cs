@@ -14,10 +14,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
     public class LoginController : ApiController
     {
         [HttpPost]
-        public Response_String Login([FromBody] DataModels.UserModel user)
+        public HttpResponseMessage Login([FromBody] DataModels.UserModel user)
         {
-            Response_String response = new Response_String();
-            response.Response = UserManager.Login(user);
+            var response = UserManager.Login(user);
             return response;
         }
         

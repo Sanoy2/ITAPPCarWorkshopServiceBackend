@@ -22,19 +22,19 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             mutex.WaitOne();
             if(city.Length >= minimumCityLength && name.Length >= minimumNameLength)
             {
-                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_address_city) == city && PrepareToCompare(n.Workshop_name).Contains(name)).ToList();
+                var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Replace(" ", string.Empty).ToLower().Equals(city) && n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
                 return list;
             }
             if (city.Length >= minimumCityLength)
             {
-                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_address_city) == city).ToList();
+                var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.ToLower().Replace(" ", string.Empty).Equals(city)).ToList();
                 mutex.ReleaseMutex();
                 return list;
             }
             if (name.Length >= minimumNameLength)
             {
-                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_name).Contains(name)).ToList();
+                var list = db.Workshop_Profiles.Where(n => n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
                 return list;
             }

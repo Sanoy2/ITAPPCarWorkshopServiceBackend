@@ -14,64 +14,32 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         private static int minimumCityLength = 3;
         private static int minimumNameLength = 3;
 
-        private delegate bool DoesItFit(Workshop_Profiles workshop, string city, string name);
-
         public static List<Workshop_Profiles> GetWorkshopsByCityAndName(string city, string name)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
-
-            DoesItFit doesItFit = ChooseFitingMethod(city, name);
-
+            city = PrepareToCompare(city);
+            name = PrepareToCompare(name);
             mutex.WaitOne();
-
-            var list = db.Workshop_Profiles.Where(n => doesItFit(n, city, name)).ToList();
-
+            if(city.Length >= minimumCityLength && name.Length >= minimumNameLength)
+            {
+                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_address_city) == city && PrepareToCompare(n.Workshop_name).Contains(name)).ToList();
+                mutex.ReleaseMutex();
+                return list;
+            }
+            if (city.Length >= minimumCityLength)
+            {
+                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_address_city) == city).ToList();
+                mutex.ReleaseMutex();
+                return list;
+            }
+            if (name.Length >= minimumNameLength)
+            {
+                var list = db.Workshop_Profiles.Where(n => PrepareToCompare(n.Workshop_name).Contains(name)).ToList();
+                mutex.ReleaseMutex();
+                return list;
+            }
             mutex.ReleaseMutex();
-
-            return list;
-        }
-
-        private static DoesItFit ChooseFitingMethod(string city, string name)
-        {
-            if(city.Length > minimumCityLength && name.Length > minimumNameLength)
-            {
-                return DoesItFitByNameAndCity;
-            }
-            else
-            {
-                if(city.Length < minimumCityLength && name.Length > minimumNameLength)
-                {
-                    return DoesItFitByName;
-                }
-                else
-                {
-                    if(city.Length > minimumCityLength)
-                    {
-                        return DoesItFitByCity;
-                    }
-                    else
-                    {
-                        return AlwaysFalse;
-                    }
-                }
-            }
-        }
-
-        private static bool AlwaysFalse(Workshop_Profiles workshop, string city, string name) => false;
-
-        private static bool DoesItFitByName(Workshop_Profiles workshop, string city, string name)
-        {
-            return CheckIfNameFitPrecisely(workshop.Workshop_name, name);
-        }
-
-        private static bool DoesItFitByCity(Workshop_Profiles workshop, string city, string name)
-        {
-            return CheckIfCityFitPrecisely(workshop.Workshop_address_city, city);
-        }
-
-        private static bool DoesItFitByNameAndCity(Workshop_Profiles workshop, string city, string name)
-        {
-            return CheckIfCityFitPrecisely(workshop.Workshop_address_city, city) && CheckIfNameFitPrecisely(workshop.Workshop_name, name);
+            return new List<Workshop_Profiles>();
         }
 
         private static bool CheckIfCityFitPrecisely(string workshopCity, string city)
@@ -238,7 +206,6 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             Exception exception = new Exception(exceptionMessage);
             return exception;
         }
-
         private static string PrepareToCompare(string text)
         {
             text = StringAdjustment.RemoveSpaces(text);
@@ -246,4 +213,5 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return text;
         }
     }
+
 }

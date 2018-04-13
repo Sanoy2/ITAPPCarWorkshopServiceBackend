@@ -21,13 +21,18 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarsFollowed
         /// </summary>
         /// <param name="Client_ID"> Client_ID </param>
         /// <returns>Returns list of cars followed by user or null if there is any car followed by user</returns>
+        [Route("api/CarsFollowed/CarsFollowedByClient/")]
         [HttpGet]
-        [Route ("carsfollowed/carsfollowedbyuser/{ID}")]
-        public IEnumerable<Cars_followed> List_of_car_followed_by_User(int Client_ID)
+        public List<DataModels.CarsFollowed> List_of_car_followed_by_User([FromUri]int Client_ID)
         {
             using(var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                return db.Cars_followed.Where(car_followed => car_followed.Client_ID == Client_ID);
+                var List = new List<DataModels.CarsFollowed>();
+                foreach(Cars_followed Car in db.Cars_followed.Where(car => car.Client_ID == Client_ID))
+                {
+                    List.Add(new DataModels.CarsFollowed(Car));
+                }
+                return List;
             }
         }
         /// <summary>
@@ -37,11 +42,11 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarsFollowed
         /// <param name="Car_follow_ID">Car_follow_ID</param>
         /// <returns>Return car followed with specyfi id or null if there is any car countaining that id</returns>
         [HttpGet]
-        public Cars_followed Car_followed_by_ID(int Car_follow_ID)
+        public DataModels.CarsFollowed Car_followed_by_ID(int Car_follow_ID)
         {
             using (var db = new ITAPPCarWorkshopServiceDBEntities())
             {
-                return db.Cars_followed.FirstOrDefault(car_followed => car_followed.Car_follow_ID == Car_follow_ID);
+                return new DataModels.CarsFollowed(db.Cars_followed.First(car_followed => car_followed.Car_follow_ID == Car_follow_ID));
             }
         }
         /// <summary>

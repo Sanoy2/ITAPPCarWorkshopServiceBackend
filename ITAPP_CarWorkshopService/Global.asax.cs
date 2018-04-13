@@ -23,7 +23,7 @@ namespace ITAPP_CarWorkshopService
             /*
             GlobalConfiguration.Configuration.MessageHandlers.Add
                 (new TokenMessageHandler()); // this enables handler globally
-                */ 
+                */
         }
     }
 }

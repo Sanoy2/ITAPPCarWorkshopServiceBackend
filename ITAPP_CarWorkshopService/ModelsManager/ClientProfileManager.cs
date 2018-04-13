@@ -11,7 +11,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
-        public static ClientProfile GetClientProfileById(int id)
+        public static List<DataModels.ClientProfile> GetClientProfileById(int id)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
@@ -19,18 +19,129 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             mutex.WaitOne();
 
-            var profile = db.Client_Profiles.FirstOrDefault(n => n.Client_ID == id);
-            clientProfile = new ClientProfile()
-            {
-                Client_ID = profile.Client_ID,
-                Client_name = profile.Client_name,
-                Client_phone_number = profile.Client_phone_number,
-                Client_surname = profile.Client_surname,
-                User_ID = (int)profile.User_ID
-            };
+            clientProfile = new ClientProfile(db.Client_Profiles.FirstOrDefault(n => n.Client_ID == id));
+
             mutex.ReleaseMutex();
 
-            return clientProfile;
+            var list = new List<ClientProfile>();
+            list.Add(clientProfile);
+
+            return list;
+        }
+
+        public static List<DataModels.ClientProfile> GetAllClientsProfiles()
+        {
+            
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            var ListOfEntities = new List<Client_Profiles>();
+            var ListOfModels = new List<DataModels.ClientProfile>();
+
+            mutex.WaitOne();
+            ListOfEntities = db.Client_Profiles.ToList();
+            mutex.ReleaseMutex();
+
+            ListOfModels = DataModels.ClientProfile.ListOfEntitiesToListOfModels(ListOfEntities);
+
+            return ListOfModels;
+        }
+
+        public static bool PutNewClientProfileToDB(DataModels.ClientProfile NewClientProfileModel)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            Client_Profiles NewClientProfileEntity = NewClientProfileModel.MakeEntityFromModel();
+
+            try
+            {
+                mutex.WaitOne();
+
+                db.Client_Profiles.Add(NewClientProfileEntity);
+                db.SaveChanges();
+
+                mutex.ReleaseMutex();
+
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+
+        public static bool ModifyExistingClientProfile(DataModels.ClientProfile ClientProfileModel)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            bool profileExists = false;
+
+            mutex.WaitOne();
+
+            if (!CheckIfClientProfileExists(ClientProfileModel))
+            {
+                profileExists = false;
+                mutex.ReleaseMutex();
+                return profileExists;
+            }
+
+            try
+            {
+                Client_Profiles ClientProfileEntity = db.Client_Profiles.FirstOrDefault(n => n.Client_ID == ClientProfileModel.ClientID);
+
+                ClientProfileEntity.Client_name = ClientProfileModel.ClientName;
+                ClientProfileEntity.Client_surname = ClientProfileModel.ClientSurname;
+                ClientProfileEntity.Client_phone_number = ClientProfileModel.ClientPhoneNumber;
+
+                db.SaveChanges();
+                mutex.ReleaseMutex();
+                return true;
+            }
+            catch (Exception e)
+            {
+                mutex.ReleaseMutex();
+                return false;
+            }
+        }
+
+        public static bool DeleteClientProfileFromDB(int ClientProfileID)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            bool profileExists = false;
+
+            mutex.WaitOne();
+
+            if(!CheckIfClientProfileExists(ClientProfileID))
+            {
+                profileExists = false;
+                mutex.ReleaseMutex();
+                return profileExists;
+            }
+
+            try
+            {
+                Client_Profiles ClientProfileEntity = db.Client_Profiles.FirstOrDefault(n => n.Client_ID == ClientProfileID);
+                db.Client_Profiles.Remove(ClientProfileEntity);
+                db.SaveChanges();
+                mutex.ReleaseMutex();
+                return true;
+            }
+            catch(Exception e)
+            {
+                mutex.ReleaseMutex();
+                return false;
+            }
+        }
+
+        private static bool CheckIfClientProfileExists(DataModels.ClientProfile ClientProfileModel)
+        {
+            return CheckIfClientProfileExists(ClientProfileModel.ClientID);
+        }
+
+        private static bool CheckIfClientProfileExists(int ClientProfileID)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            return db.Client_Profiles.Any(n => n.Client_ID == ClientProfileID);
         }
     }
 }

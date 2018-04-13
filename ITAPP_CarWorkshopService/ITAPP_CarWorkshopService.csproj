@@ -231,6 +231,7 @@
     <Compile Include="DataModels\CarsFollowedModel.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
     <Compile Include="DataModels\UserModel.cs" />
+    <Compile Include="DataModels\WorkshopProfileModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

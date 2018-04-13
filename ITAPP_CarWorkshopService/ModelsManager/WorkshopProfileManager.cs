@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Threading;
 using ITAPP_CarWorkshopService.AdditionalModels;
+using System.Net;
+using System.Net.Http;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -14,7 +16,55 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         private static int minimumCityLength = 3;
         private static int minimumNameLength = 3;
 
-        public static List<Workshop_Profiles> GetWorkshopsByCityAndName(string city, string name)
+        public static HttpResponseMessage CreateNewWorkshopProfile(DataModels.WorkshopProfileModel WorkshopProfileModel, int UserID)
+        {
+            
+            mutex.WaitOne();
+
+            if(CheckIfWorkshopProfileExistsByNIP(WorkshopProfileModel.WorkshopNIP))
+            {
+                mutex.ReleaseMutex();
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("Workshop of given NIP already exists.");
+
+                return response;
+            }
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            ITAPP_CarWorkshopService.Workshop_Profiles WorkshopProfileEntity = WorkshopProfileModel.MakeWorkshopProfileEntityFromWorkshopProfileModel();
+
+            try
+            {
+                db.Workshop_Profiles.Add(WorkshopProfileEntity);
+                db.SaveChanges();
+
+                var NewWorkshopEmployee = new Workshop_Employees()
+                {
+                    Workshop_empoyee_ID = UserID,
+                    Workshop_ID = WorkshopProfileEntity.Workshop_ID
+                };
+
+                db.Workshop_Employees.Add(NewWorkshopEmployee);
+                db.SaveChanges();
+
+                mutex.ReleaseMutex();
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new StringContent("Workshop profile was succesfully created");
+
+                return response;
+            }
+            catch(Exception e)
+            {
+                mutex.ReleaseMutex();
+                var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                response.Content = new StringContent("Something gone wrong while adding the workshop profile to DB");
+
+                return response;
+            }
+        }
+
+        public static List<DataModels.WorkshopProfileModel> GetWorkshopsByCityAndName(string city, string name)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
             city = PrepareToCompare(city);
@@ -24,22 +74,25 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             {
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Replace(" ", string.Empty).ToLower().Equals(city) && n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
-                return list;
+                var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                return ListOfModels;
             }
             if (city.Length >= minimumCityLength)
             {
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.ToLower().Replace(" ", string.Empty).Equals(city)).ToList();
                 mutex.ReleaseMutex();
-                return list;
+                var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                return ListOfModels;
             }
             if (name.Length >= minimumNameLength)
             {
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
-                return list;
+                var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                return ListOfModels;
             }
             mutex.ReleaseMutex();
-            return new List<Workshop_Profiles>();
+            return new List<DataModels.WorkshopProfileModel>();
         }
 
         private static bool CheckIfCityFitPrecisely(string workshopCity, string city)
@@ -87,63 +140,6 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return ListOfCitiesAndZipCodes;
         }
 
-        /// <summary>
-        /// Method to get workshop profile by its ID
-        /// </summary>
-        /// <param name="workshopId"></param>
-        /// <returns>Return workshop profile od specified ID</returns>
-        /// <remarks>Throws an exception if does not find any profile with specified ID</remarks>
-        public static Workshop_Profiles GetWorkshopProfileById(int workshopId)
-        {
-            mutex.WaitOne();
-
-            if (!CheckIfWorkshopProfileExists(workshopId))
-            {
-                mutex.ReleaseMutex();
-                throw NoWorkshopOfGivenId(workshopId);
-            }
-
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            Workshop_Profiles workshop = db.Workshop_Profiles.FirstOrDefault(n => n.Workshop_ID == workshopId);
-
-            CountAverageRating(workshop);
-
-            db.SaveChanges();
-
-            mutex.ReleaseMutex();
-
-            return workshop;
-        }
-
-        public static List<Workshop_Profiles> GetWorkshopProfilesByCity(string city)
-        {
-            city = PrepareToCompare(city);
-
-            mutex.WaitOne();
-
-            if (!CheckIfWorkshopProfileExistsByCity(city))
-            {
-                mutex.ReleaseMutex();
-                //throw NoWorkshopOfGivenCity(city);
-                return new List<Workshop_Profiles>();
-            }
-
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-            var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.ToLower().Equals(city)).ToList();
-
-            foreach (var item in list)
-            {
-                CountAverageRating(item);
-            }
-
-            db.SaveChanges();
-
-            mutex.ReleaseMutex();
-
-            return list;
-        }
-
-        private static double CountAverageRating(Workshop_Profiles workshop) => 0.0d;
 
         private static bool CheckIfWorkshopProfileExists(int workshopId)
         {
@@ -179,33 +175,6 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return db.Workshop_Profiles.Any(workshop => workshop.Workshop_name.ToLower().Equals(name));
         }
 
-        private static Exception NoWorkshopOfGivenId(int workshopId)
-        {
-            string exceptionMessage;
-            exceptionMessage = "Workshop with id: ";
-            exceptionMessage += workshopId;
-            exceptionMessage += " does not exists.";
-            Exception exception = new Exception(exceptionMessage);
-            return exception;
-        }
-
-        private static Exception NoWorkshopOfGivenCity(string city)
-        {
-            string exceptionMessage;
-            exceptionMessage = "There are no any workshop in city: ";
-            exceptionMessage += city;
-            Exception exception = new Exception(exceptionMessage);
-            return exception;
-        }
-
-        private static Exception NoWorkshopOfGivenName(string name)
-        {
-            string exceptionMessage;
-            exceptionMessage = "There are no any workshop of given name: ";
-            exceptionMessage += name;
-            Exception exception = new Exception(exceptionMessage);
-            return exception;
-        }
         private static string PrepareToCompare(string text)
         {
             text = StringAdjustment.RemoveSpaces(text);

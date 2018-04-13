@@ -12,7 +12,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
-        public static DataModels.User GetUser(int userId)
+        public static List<DataModels.UserModel> GetUser(int userId)
         {
             mutex.WaitOne();
 
@@ -23,65 +23,72 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            DataModels.User user = new DataModels.User(db.Users.FirstOrDefault(n => n.User_ID == userId));
+            DataModels.UserModel user = new DataModels.UserModel(db.Users.FirstOrDefault(n => n.User_ID == userId));
             mutex.ReleaseMutex();
 
             user.UserPassword = "******";
 
-            return user;
+            var list = new List<DataModels.UserModel>();
+            list.Add(user);
+
+            return list;
         }
 
-        public static string RegisterUser(User user)
+        public static bool RegisterUser(DataModels.UserModel UserModel)
         {
-            user.User_email = UserEmailAdjustment(user.User_email);
+            UserModel.UserEmail = UserEmailAdjustment(UserModel.UserEmail);
 
-            if(CheckIfUserExistsPrivate(user.User_email))
-            {
-                return "User of given email already exists.";
-            }
+            var UserEntity = UserModel.MakeUserEntityFromUserModel();
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            db.Users.Add(user);
-            db.SaveChanges();
-            mutex.ReleaseMutex();
-
-            return "User was registered.";
-        }
-
-        public static string Login(User user)
-        {
-            user.User_email = UserEmailAdjustment(user.User_email);
-
-            var db = new ITAPPCarWorkshopServiceDBEntities();
-
-            mutex.WaitOne();
-            if (!CheckIfUserExistsPrivate(user.User_email))
+            if (CheckIfUserExistsPrivate(UserModel.UserEmail))
             {
                 mutex.ReleaseMutex();
-                throw NoUserOfGivenEmail(user.User_email);
+                return false;
+            }
+
+            db.Users.Add(UserEntity);
+            db.SaveChanges();
+
+            mutex.ReleaseMutex();
+
+            return true;
+        }
+
+        public static string Login(DataModels.UserModel user)
+        {
+            user.UserEmail = UserEmailAdjustment(user.UserEmail);
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+            if (!CheckIfUserExistsPrivate(user.UserEmail))
+            {
+                mutex.ReleaseMutex();
+                throw NoUserOfGivenEmail(user.UserEmail);
             }
     
             if(TryToLogIn(user))
             {
                 mutex.ReleaseMutex();
-                return GenerateTokenForUser(user.User_email);
+                return GenerateTokenForUser(user.UserEmail);
             }
             else
             {
                 mutex.ReleaseMutex();
-                throw WrongPassword(user.User_email);
+                throw WrongPassword(user.UserEmail);
             }
         }
 
-        private static bool TryToLogIn(User user)
+        private static bool TryToLogIn(DataModels.UserModel user)
         {
             bool result = false;
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            result = db.Users.Any(n => n.User_email == user.User_email && n.User_password == user.User_password);
+            result = db.Users.Any(n => n.User_email.Equals(user.UserEmail) && n.User_password.Equals(user.UserPassword));
 
             return result;
         }

@@ -228,7 +228,7 @@
     </Compile>
     <Compile Include="DataModels\CarsFollowed.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
-    <Compile Include="DataModels\User.cs" />
+    <Compile Include="DataModels\UserModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

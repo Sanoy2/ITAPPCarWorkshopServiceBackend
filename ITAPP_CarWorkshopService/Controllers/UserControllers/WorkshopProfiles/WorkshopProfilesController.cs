@@ -7,6 +7,7 @@ using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
 using ITAPP_CarWorkshopService.ModelsManager;
 using ITAPP_CarWorkshopService.AdditionalModels;
+using ITAPP_CarWorkshopService.Authorization;
 
 namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
 {
@@ -26,9 +27,11 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
         }
 
         [HttpPost]
-        public HttpResponseMessage CreateNewWorkshopProfile(DataModels.WorkshopProfileModel NewWorkshopProfileModel, [FromUri]int UserID)
+        [AuthorizationFilter]
+        public HttpResponseMessage CreateNewWorkshopProfile(DataModels.WorkshopProfileModel NewWorkshopProfileModel)
         {
-            return WorkshopProfileManager.CreateNewWorkshopProfile(NewWorkshopProfileModel, UserID);
+            int userID = Token.GetUserIdFromRequestHeader(Request);
+            return WorkshopProfileManager.CreateNewWorkshopProfile(NewWorkshopProfileModel, userID);
         }
 
     }

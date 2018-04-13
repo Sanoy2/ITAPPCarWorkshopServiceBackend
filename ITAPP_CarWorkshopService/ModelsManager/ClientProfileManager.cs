@@ -11,22 +11,39 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         private static Mutex mutex = new Mutex();
 
-        public static List<DataModels.ClientProfile> GetClientProfileById(int id)
+        public static List<DataModels.ClientProfile> GetClientProfileById(int id , bool withCarsFollowed)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            ClientProfile clientProfile;
+            if (withCarsFollowed)
+            {
+                ClientProfile clientProfile;
+                var ListCarsFollowed = new List<DataModels.CarProfileModel>();
 
-            mutex.WaitOne();
+                mutex.WaitOne();
 
-            clientProfile = new ClientProfile(db.Client_Profiles.FirstOrDefault(n => n.Client_ID == id));
+                clientProfile = new ClientProfile(db.Client_Profiles.FirstOrDefault(n => n.Client_ID == id));
+                foreach (Cars_followed Car in db.Cars_followed.Where(car => car.Client_ID == id))
+                {
+                    ListCarsFollowed.Add(new CarProfileModel(Car.Car_Profiles));
+                }
+                mutex.ReleaseMutex();
+                clientProfile.CarsFollowedByClient = ListCarsFollowed;
+                var list = new List<ClientProfile>();
+                list.Add(clientProfile);
 
-            mutex.ReleaseMutex();
-
-            var list = new List<ClientProfile>();
-            list.Add(clientProfile);
-
-            return list;
+                return list;
+            }
+            else
+            {
+                ClientProfile clientProfile;
+                mutex.WaitOne();
+                clientProfile = new ClientProfile(db.Client_Profiles.FirstOrDefault(n => n.Client_ID == id));
+                mutex.ReleaseMutex();
+                var list = new List<ClientProfile>();
+                list.Add(clientProfile);
+                return list;
+            }
         }
 
         public static List<DataModels.ClientProfile> GetAllClientsProfiles()

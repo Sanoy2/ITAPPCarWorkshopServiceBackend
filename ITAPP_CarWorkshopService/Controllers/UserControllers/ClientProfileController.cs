@@ -25,11 +25,16 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
         }
 
         [HttpGet]
+        [Route("api/ClientProfile/WithCarsFollowed")]
+        public List<DataModels.ClientProfile> GetClientProfileByIdWithCars(int ID)
+        {
+            return ClientProfileManager.GetClientProfileById(ID,true);
+        }
+        [HttpGet]
         public List<DataModels.ClientProfile> GetClientProfileById(int ID)
         {
-            return ClientProfileManager.GetClientProfileById(ID);
+            return ClientProfileManager.GetClientProfileById(ID, false);
         }
-
         [HttpPost]
         public Response_String CreateClientProfile([FromBody] DataModels.ClientProfile NewClientProfileModel)
         {

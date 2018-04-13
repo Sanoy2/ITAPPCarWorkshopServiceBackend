@@ -15,7 +15,6 @@ namespace ITAPP_CarWorkshopService.ModelsManager
         public static List<DataModels.CarProfileModel> GetAllCarProfiles()
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();
-
             mutex.WaitOne();
 
             var ListOfEntities = db.Car_Profiles.ToList();

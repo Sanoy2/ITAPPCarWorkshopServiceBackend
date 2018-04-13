@@ -12,7 +12,8 @@ namespace ITAPP_CarWorkshopService.DataModels
         public string ClientName { get; set; }
         public string ClientSurname { get; set; }
         public string ClientPhoneNumber { get; set; }
-
+        public ICollection<DataModels.CarsFollowed> CarsFollowed { get; set; }
+        
         public ClientProfile()
         {
             ClientID = -1;
@@ -20,6 +21,7 @@ namespace ITAPP_CarWorkshopService.DataModels
             ClientName = "default name";
             ClientSurname = "default surname";
             ClientPhoneNumber = "000000000";
+
         }
 
         public ClientProfile(ITAPP_CarWorkshopService.Client_Profiles entityProfile)
@@ -44,7 +46,7 @@ namespace ITAPP_CarWorkshopService.DataModels
                 User_ID = UserID,
                 Client_name = ClientName,
                 Client_surname = ClientSurname,
-                Client_phone_number = ClientPhoneNumber
+                Client_phone_number = ClientPhoneNumber,
             };
 
             return entityProfile;

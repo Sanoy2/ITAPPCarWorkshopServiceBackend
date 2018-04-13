@@ -12,7 +12,7 @@ namespace ITAPP_CarWorkshopService.DataModels
         public string ClientName { get; set; }
         public string ClientSurname { get; set; }
         public string ClientPhoneNumber { get; set; }
-        public ICollection<DataModels.CarsFollowed> CarsFollowed { get; set; }
+        public List<CarProfileModel> CarsFollowedByClient { get; set; }
         
         public ClientProfile()
         {

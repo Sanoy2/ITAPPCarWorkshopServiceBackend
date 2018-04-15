@@ -228,6 +228,7 @@
     </Compile>
     <Compile Include="DataModels\CarBrandModel.cs" />
     <Compile Include="DataModels\CarProfileModel.cs" />
+    <Compile Include="DataModels\CarServiceModel.cs" />
     <Compile Include="DataModels\CarsFollowedModel.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
     <Compile Include="DataModels\UserModel.cs" />
@@ -252,6 +253,7 @@
     </Compile>
     <Compile Include="ModelsManager\CarBrandManager.cs" />
     <Compile Include="ModelsManager\CarProfileManager.cs" />
+    <Compile Include="ModelsManager\CarServiceMenager.cs" />
     <Compile Include="ModelsManager\CarsFollowedManager.cs" />
     <Compile Include="ModelsManager\ClientProfileManager.cs" />
     <Compile Include="ModelsManager\UserManager.cs" />

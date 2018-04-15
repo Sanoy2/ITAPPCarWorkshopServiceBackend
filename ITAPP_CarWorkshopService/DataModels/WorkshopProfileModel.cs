@@ -19,6 +19,7 @@ namespace ITAPP_CarWorkshopService.DataModels
         public string WorkshopLogoURL { get; set; }
         public double WorkshopAverageRating { get; set; }
         public string WorkshopName { get; set; }
+        public List<DataModels.CarBrandModel> BrandsList { get; set; } 
 
         public WorkshopProfileModel()
         {

@@ -27,7 +27,7 @@ namespace ITAPP_CarWorkshopService.DataModels
             BrandName = CarBrandEntity.Brand_Name;
         }
 
-        public ITAPP_CarWorkshopService.Car_Brands MakeCarBrandEntityFromCarBrandModel(DataModels.CarBrandModel CarBrandModel)
+        public ITAPP_CarWorkshopService.Car_Brands MakeCarBrandEntityFromCarBrandModel()
         {
             var CarBrandEntity = new ITAPP_CarWorkshopService.Car_Brands()
             {

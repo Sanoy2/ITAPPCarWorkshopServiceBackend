@@ -75,6 +75,13 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Replace(" ", string.Empty).ToLower().Equals(city) && n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
                 var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                foreach(DataModels.WorkshopProfileModel Connection in ListOfModels)
+                {
+                    foreach(Workshop_Brand_Connections conn in db.Workshop_Brand_Connections.Where(con => con.Workshop_ID == Connection.WorkshopID))
+                    {
+                        Connection.BrandsList.Add(new DataModels.CarBrandModel(db.Car_Brands.FirstOrDefault(Brand => Brand.Brand_ID == conn.Car_brand_ID)));
+                    }
+                }
                 return ListOfModels;
             }
             if (city.Length >= minimumCityLength)
@@ -82,6 +89,13 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.ToLower().Replace(" ", string.Empty).Equals(city)).ToList();
                 mutex.ReleaseMutex();
                 var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                foreach (DataModels.WorkshopProfileModel Connection in ListOfModels)
+                {
+                    foreach (Workshop_Brand_Connections conn in db.Workshop_Brand_Connections.Where(con => con.Workshop_ID == Connection.WorkshopID))
+                    {
+                        Connection.BrandsList.Add(new DataModels.CarBrandModel(db.Car_Brands.FirstOrDefault(Brand => Brand.Brand_ID == conn.Car_brand_ID)));
+                    }
+                }
                 return ListOfModels;
             }
             if (name.Length >= minimumNameLength)
@@ -89,6 +103,13 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
                 var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
+                foreach (DataModels.WorkshopProfileModel Connection in ListOfModels)
+                {
+                    foreach (Workshop_Brand_Connections conn in db.Workshop_Brand_Connections.Where(con => con.Workshop_ID == Connection.WorkshopID))
+                    {
+                        Connection.BrandsList.Add(new DataModels.CarBrandModel(db.Car_Brands.FirstOrDefault(Brand => Brand.Brand_ID == conn.Car_brand_ID)));
+                    }
+                }
                 return ListOfModels;
             }
             mutex.ReleaseMutex();

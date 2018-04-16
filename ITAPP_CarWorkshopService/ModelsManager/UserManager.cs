@@ -7,6 +7,7 @@ using ITAPP_CarWorkshopService.Authorization;
 using ITAPP_CarWorkshopService.DataModels;
 using System.Net.Http;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -92,12 +93,22 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             if (TryToLogIn(user))
             {
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                string TokenString = GenerateTokenForUser(user.UserEmail);
+                int userID = GetUserIdByUserEmailPrivate(user.UserEmail);
+
                 mutex.ReleaseMutex();
 
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = new StringContent(GenerateTokenForUser(user.UserEmail));
+                var ResponseContentAsModel = new ITAPP_CarWorkshopService.AdditionalModels.LoginResponse()
+                {
+                    Token = TokenString,
+                    UserID = userID
+                };
 
-                return response;
+                var ResponseContentAsJSON = JsonConvert.SerializeObject(ResponseContentAsModel);
+                response.Content = new StringContent(ResponseContentAsJSON); 
+
+                return response; 
             }
             else
             {

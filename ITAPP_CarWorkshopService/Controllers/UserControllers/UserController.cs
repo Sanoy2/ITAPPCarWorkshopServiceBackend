@@ -25,6 +25,12 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
             return UserManager.GetUser(ID);
         }
 
+        [HttpGet]
+        public HttpResponseMessage CheckIfNameValid([FromUri] string EmailAddress)
+        {
+            return UserManager.CheckIfNameValidPublic(EmailAddress);
+        }
+
         [HttpPost]
         public HttpResponseMessage RegisterUser([FromBody] DataModels.UserModel NewUser)
         {

@@ -36,6 +36,21 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return list;
         }
 
+        public static HttpResponseMessage CheckIfNameValidPublic(string EmailAddress)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            if (db.Users.Any(n => n.User_email.ToLower() == EmailAddress.ToLower()))
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                return response;
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                return response;
+            }
+        }
+
         public static bool RegisterUser(DataModels.UserModel UserModel)
         {
             UserModel.UserEmail = UserEmailAdjustment(UserModel.UserEmail);
@@ -74,8 +89,8 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
                 return response;
             }
-    
-            if(TryToLogIn(user))
+
+            if (TryToLogIn(user))
             {
                 mutex.ReleaseMutex();
 

@@ -35,6 +35,7 @@ namespace ITAPP_CarWorkshopService.DataModels
             WorkshopURL = "default.com";
             WorkshopLogoURL = "default.com/img";
             WorkshopAverageRating = 0.0;
+            BrandsList = new List<CarBrandModel>();
         }
 
         public WorkshopProfileModel(ITAPP_CarWorkshopService.Workshop_Profiles WorkshopProfileEntity)
@@ -56,6 +57,7 @@ namespace ITAPP_CarWorkshopService.DataModels
             WorkshopURL = WorkshopProfileEntity.Workshop_URL;
             WorkshopLogoURL = WorkshopProfileEntity.Workshop_logo_URL;
             WorkshopAverageRating = (double)WorkshopProfileEntity.Workshop_average_rating;
+            BrandsList = new List<CarBrandModel>();
         }
 
         public ITAPP_CarWorkshopService.Workshop_Profiles MakeWorkshopProfileEntityFromWorkshopProfileModel()

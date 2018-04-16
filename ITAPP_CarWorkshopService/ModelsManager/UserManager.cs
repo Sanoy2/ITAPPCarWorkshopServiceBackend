@@ -96,13 +96,20 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 var response = new HttpResponseMessage(HttpStatusCode.OK);
                 string TokenString = GenerateTokenForUser(user.UserEmail);
                 int userID = GetUserIdByUserEmailPrivate(user.UserEmail);
+                int clientID = -1;
+
+                if(db.Client_Profiles.Any(n => n.User_ID == userID))
+                {
+                    clientID = db.Client_Profiles.First(n => n.User_ID == userID).Client_ID;
+                }
 
                 mutex.ReleaseMutex();
 
                 var ResponseContentAsModel = new ITAPP_CarWorkshopService.AdditionalModels.LoginResponse()
                 {
                     Token = TokenString,
-                    UserID = userID
+                    UserID = userID,
+                    ClientID = clientID
                 };
 
                 var ResponseContentAsJSON = JsonConvert.SerializeObject(ResponseContentAsModel);

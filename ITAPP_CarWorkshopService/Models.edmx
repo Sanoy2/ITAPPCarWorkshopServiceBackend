@@ -53,6 +53,16 @@
           <Property Name="Client_phone_number" Type="varchar" MaxLength="12" />
           <Property Name="User_ID" Type="int" />
         </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="User_ID" />
@@ -115,9 +125,9 @@
           </Key>
           <Property Name="Workshop_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Workshop_NIP" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="Workshop_address_city" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Workshop_address_city" Type="varchar" MaxLength="255" />
           <Property Name="Workshop_address_streer" Type="varchar" MaxLength="255" Nullable="false" />
-          <Property Name="Workshop_address_zip_code" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Workshop_address_zip_code" Type="varchar" MaxLength="6" />
           <Property Name="Workshop_description" Type="text" />
           <Property Name="Workshop_email_address" Type="varchar" MaxLength="255" />
           <Property Name="Workshop_phone_number" Type="varchar" MaxLength="12" />
@@ -125,6 +135,8 @@
           <Property Name="Workshop_logo_URL" Type="text" />
           <Property Name="Workshop_average_rating" Type="float" />
           <Property Name="Workshop_name" Type="varchar" MaxLength="255" />
+          <Property Name="Latitude" Type="varchar" MaxLength="255" />
+          <Property Name="Longtitude" Type="varchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -306,6 +318,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <EntitySet Name="Car_Services" EntityType="Self.Car_Services" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cars_followed" EntityType="Self.Cars_followed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client_Profiles" EntityType="Self.Client_Profiles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Workshop_Brand_Connections" EntityType="Self.Workshop_Brand_Connections" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Workshop_Comments" EntityType="Self.Workshop_Comments" Schema="dbo" store:Type="Tables" />
@@ -510,9 +523,9 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           </Key>
           <Property Name="Workshop_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Workshop_NIP" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Workshop_address_city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Workshop_address_city" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Workshop_address_streer" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Workshop_address_zip_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Workshop_address_zip_code" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
           <Property Name="Workshop_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Workshop_email_address" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Workshop_phone_number" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
@@ -525,6 +538,8 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <NavigationProperty Name="Workshop_Employees" Relationship="Self.FK__Workshop___Works__02FC7413" FromRole="Workshop_Profiles" ToRole="Workshop_Employees" />
           <NavigationProperty Name="Workshop_Opening_Hours" Relationship="Self.FK__Workshop___Works__151B244E" FromRole="Workshop_Profiles" ToRole="Workshop_Opening_Hours" />
           <Property Name="Workshop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Longtitude" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="database_firewall_rules">
           <Key>
@@ -751,6 +766,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             <End Role="User" EntitySet="Users" />
             <End Role="Client_Profiles" EntitySet="Client_Profiles" />
           </AssociationSet>
+          <EntitySet Name="sysdiagrams" EntityType="ITAPPCarWorkshopServiceDBModel.sysdiagram" />
         </EntityContainer>
         <Association Name="FK__Client_Pr__User___208CD6FA">
           <End Type="ITAPPCarWorkshopServiceDBModel.User" Role="User" Multiplicity="0..1" />
@@ -764,6 +780,16 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -887,6 +913,8 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <EntitySetMapping Name="Workshop_Profiles">
             <EntityTypeMapping TypeName="ITAPPCarWorkshopServiceDBModel.Workshop_Profiles">
               <MappingFragment StoreEntitySet="Workshop_Profiles">
+                <ScalarProperty Name="Longtitude" ColumnName="Longtitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Workshop_name" ColumnName="Workshop_name" />
                 <ScalarProperty Name="Workshop_ID" ColumnName="Workshop_ID" />
                 <ScalarProperty Name="Workshop_NIP" ColumnName="Workshop_NIP" />
@@ -911,6 +939,17 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
                 <ScalarProperty Name="end_ip_address" ColumnName="end_ip_address" />
                 <ScalarProperty Name="create_date" ColumnName="create_date" />
                 <ScalarProperty Name="modify_date" ColumnName="modify_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ITAPPCarWorkshopServiceDBModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

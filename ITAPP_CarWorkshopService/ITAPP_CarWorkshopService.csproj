@@ -226,6 +226,12 @@
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>Models.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataModels\CarBrandModel.cs" />
+    <Compile Include="DataModels\CarProfileModel.cs" />
+    <Compile Include="DataModels\CarsFollowedModel.cs" />
+    <Compile Include="DataModels\ClientProfile.cs" />
+    <Compile Include="DataModels\UserModel.cs" />
+    <Compile Include="DataModels\WorkshopProfileModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -245,6 +251,9 @@
       <DependentUpon>Models.edmx</DependentUpon>
     </Compile>
     <Compile Include="ModelsManager\CarBrandManager.cs" />
+    <Compile Include="ModelsManager\CarProfileManager.cs" />
+    <Compile Include="ModelsManager\CarsFollowedManager.cs" />
+    <Compile Include="ModelsManager\ClientProfileManager.cs" />
     <Compile Include="ModelsManager\UserManager.cs" />
     <Compile Include="ModelsManager\WorkshopProfileManager.cs" />
     <Compile Include="ModelsManager\WorkshopCommentManager.cs" />

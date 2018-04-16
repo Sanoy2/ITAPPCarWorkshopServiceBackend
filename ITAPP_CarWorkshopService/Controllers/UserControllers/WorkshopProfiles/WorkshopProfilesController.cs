@@ -15,9 +15,9 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers.WorkshopProfiles
     {
         [HttpGet]
         [Route("api/workshopprofiles/cities")]
-        public List<CityAndZipCode> GetCities()
+        public List<CityModel> GetCities()
         {
-            return WorkshopProfileManager.GetAllCitiesAndZipCodes();
+            return WorkshopProfileManager.GetAllCities();
         }
 
         [HttpGet]

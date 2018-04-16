@@ -18,10 +18,10 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
         public static HttpResponseMessage CreateNewWorkshopProfile(DataModels.WorkshopProfileModel WorkshopProfileModel, int UserID)
         {
-            
+
             mutex.WaitOne();
 
-            if(CheckIfWorkshopProfileExistsByNIP(WorkshopProfileModel.WorkshopNIP))
+            if (CheckIfWorkshopProfileExistsByNIP(WorkshopProfileModel.WorkshopNIP))
             {
                 mutex.ReleaseMutex();
                 var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
@@ -54,7 +54,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
                 return response;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 mutex.ReleaseMutex();
                 var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
@@ -70,14 +70,14 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             city = PrepareToCompare(city);
             name = PrepareToCompare(name);
             mutex.WaitOne();
-            if(city.Length >= minimumCityLength && name.Length >= minimumNameLength)
+            if (city.Length >= minimumCityLength && name.Length >= minimumNameLength)
             {
                 var list = db.Workshop_Profiles.Where(n => n.Workshop_address_city.Replace(" ", string.Empty).ToLower().Equals(city) && n.Workshop_name.ToLower().Replace(" ", string.Empty).Contains(name)).ToList();
                 mutex.ReleaseMutex();
                 var ListOfModels = DataModels.WorkshopProfileModel.MakeModelsListFromEntitiesList(list);
-                foreach(DataModels.WorkshopProfileModel Connection in ListOfModels)
+                foreach (DataModels.WorkshopProfileModel Connection in ListOfModels)
                 {
-                    foreach(Workshop_Brand_Connections conn in db.Workshop_Brand_Connections.Where(con => con.Workshop_ID == Connection.WorkshopID))
+                    foreach (Workshop_Brand_Connections conn in db.Workshop_Brand_Connections.Where(con => con.Workshop_ID == Connection.WorkshopID))
                     {
                         Connection.BrandsList.Add(new DataModels.CarBrandModel(db.Car_Brands.FirstOrDefault(Brand => Brand.Brand_ID == conn.Car_brand_ID)));
                     }
@@ -139,12 +139,11 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
         }
 
-        public static List<CityAndZipCode> GetAllCitiesAndZipCodes()
+        public static List<CityModel> GetAllCities()
         {
-            List<CityAndZipCode> ListOfCitiesAndZipCodes = new List<CityAndZipCode>();
+            List<CityModel> ListOfCities = new List<CityModel>();
 
             mutex.WaitOne();
-
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             var ListOfWorkshopProfiles = db.Workshop_Profiles.ToList();
@@ -153,12 +152,16 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             foreach (var item in ListOfWorkshopProfiles)
             {
-                ListOfCitiesAndZipCodes.Add(new CityAndZipCode(item.Workshop_address_city, item.Workshop_address_zip_code));
+                if (ListOfCities.Any(n => n.City.Equals(item.Workshop_address_city)))
+                {
+                    // do nothing - city already exists
+                    continue;
+                }
+
+                ListOfCities.Add(new CityModel(item.Workshop_address_city));
             }
 
-            ListOfCitiesAndZipCodes = ListOfCitiesAndZipCodes.Distinct().ToList();
-
-            return ListOfCitiesAndZipCodes;
+            return ListOfCities;
         }
 
 

@@ -19,6 +19,8 @@ namespace ITAPP_CarWorkshopService.DataModels
         public string WorkshopLogoURL { get; set; }
         public double WorkshopAverageRating { get; set; }
         public string WorkshopName { get; set; }
+        public string Latitude { get; set; }
+        public string Longtitude { get; set; }
         public List<DataModels.CarBrandModel> BrandsList { get; set; } 
 
         public WorkshopProfileModel()
@@ -36,6 +38,8 @@ namespace ITAPP_CarWorkshopService.DataModels
             WorkshopLogoURL = "default.com/img";
             WorkshopAverageRating = 0.0;
             BrandsList = new List<CarBrandModel>();
+            Longtitude = "";
+            Latitude = "";
         }
 
         public WorkshopProfileModel(ITAPP_CarWorkshopService.Workshop_Profiles WorkshopProfileEntity)
@@ -58,6 +62,8 @@ namespace ITAPP_CarWorkshopService.DataModels
             WorkshopLogoURL = WorkshopProfileEntity.Workshop_logo_URL;
             WorkshopAverageRating = (double)WorkshopProfileEntity.Workshop_average_rating;
             BrandsList = new List<CarBrandModel>();
+            Longtitude = (string)WorkshopProfileEntity.Longtitude;
+            Latitude = (string)WorkshopProfileEntity.Latitude;
         }
 
         public ITAPP_CarWorkshopService.Workshop_Profiles MakeWorkshopProfileEntityFromWorkshopProfileModel()
@@ -75,7 +81,9 @@ namespace ITAPP_CarWorkshopService.DataModels
                 Workshop_phone_number = WorkshopPhoneNumber,
                 Workshop_URL = WorkshopURL,
                 Workshop_logo_URL = WorkshopLogoURL,
-                Workshop_average_rating = WorkshopAverageRating
+                Workshop_average_rating = WorkshopAverageRating,
+                Latitude = Latitude,
+                Longtitude = Longtitude
             };
 
             return WorkshopProfileEntity;

@@ -7,23 +7,21 @@ using System.Web.Http;
 using ITAPP_CarWorkshopService.ResonseClass;
 using ITAPP_CarWorkshopService.Authorization;
 using ITAPP_CarWorkshopService.ModelsManager;
+using ITAPP_CarWorkshopService.DataModels;
 
 namespace ITAPP_CarWorkshopService.Controllers.UserControllers
 {
     public class LoginController : ApiController
     {
         [HttpPost]
-        [Route("api/login")]
-        public Response_String Login([FromBody] User user)
+        public HttpResponseMessage Login([FromBody] DataModels.UserModel user)
         {
-            Response_String response = new Response_String();
-            response.Response = UserManager.Login(user);
+            var response = UserManager.Login(user);
             return response;
         }
         
         [HttpDelete]
         [AuthorizationFilter]
-        [Route("api/login")]
         public Response_String Logout()
         {
             string tokenString = Authorization.Token.GetTokenStringFromRequestHeader(Request);

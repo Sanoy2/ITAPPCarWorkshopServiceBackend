@@ -18,53 +18,38 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
     /// </summary>
     public class UserController : ApiController
     {
-        /// <summary>
-        /// GET method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user + ID &#xD;
-        /// </summary>
-        /// <param name="ID">User_ID</param>
-        /// <returns>Return a specyfic user with passed id or null if there is no such user</returns>
+
         [HttpGet]
-        public User Get_User(int ID)
+        public List<DataModels.UserModel> GetUser(int ID)
         {
             return UserManager.GetUser(ID);
         }
-        /// <summary>
-        /// POST method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user &#xD;
-        /// User_ID is automaticly incremented so as a User_ID = "" &#xD;
-        /// </summary>
-        /// <param name="NewUser">
-        /// {
-        ///     User_email =, &#xD;
-        ///     User_ID =, &#xD;
-        ///     User_password =, &#xD;
-        /// }
-        /// </param>
-        /// <returns>Returns JSON with { Response : string }
-        /// </returns>
-        [HttpPost]
-        public Response_String RegisterUser([FromBody] User NewUser)
-        {
-            Response_String response = new Response_String()
-            {
-                Response = UserManager.RegisterUser(NewUser)
-            };
 
-            return response;
+        [HttpGet]
+        public HttpResponseMessage CheckIfNameValid([FromUri] string EmailAddress)
+        {
+            return UserManager.CheckIfNameValidPublic(EmailAddress);
         }
-        /// <summary>
-        /// PUT method &#xD;
-        /// URL : http://itappcarworkshopservice.azurewebsites.net/api/user &#xD;
-        /// User_ID should be passed by in body &#xD;
-        /// </summary>
-        /// <param name="User">
-        /// {
-        ///     User_email =, &#xD;
-        ///     User_ID =, &#xD;
-        ///     User_password =, &#xD;
-        /// }</param>
-        /// <returns>Returns JSON with { Response : string }, string countains : "Item was modify" , "Item already exists" or "Item does not exsists"</returns>
+
+        [HttpPost]
+        public HttpResponseMessage RegisterUser([FromBody] DataModels.UserModel NewUser)
+        {
+            if(UserManager.RegisterUser(NewUser))
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content =  new StringContent ("User succesfully added to DB.");
+
+                return response;
+            }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("User was not added to DB.");
+
+                return response;
+            }
+        }
+        /*
         [HttpPut]
         [AuthorizationFilter]
         public Response_String Update_User([FromBody]User User)
@@ -88,12 +73,7 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 return new Response_String() { Response = "Item does not exsists" }; ;
             }
         }
-        /// <summary>
-        /// DELETE method &#xD;
-        /// URL = http://itappcarworkshopservice.azurewebsites.net/api/user/ +ID &#xD;
-        /// </summary>
-        /// <param name="ID">User_ID</param>
-        /// <returns>Returns JSON with { Response : string }, string countains : "Item was removed" or "Item does not exsists"</returns>
+
         [HttpDelete]
         [AuthorizationFilter]
         public Response_String Delete_User(int ID)
@@ -110,5 +90,6 @@ namespace ITAPP_CarWorkshopService.Controllers.UserControllers
                 return new Response_String() { Response = "Item does not exsists" };
             }
         }
+        */
     }
 }

@@ -20,42 +20,36 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarBrands
     {
         
         [HttpGet]
-        public List<Car_Brands> GetAllCarBrands()
+        public List<DataModels.CarBrandModel> GetAllCarBrands()
         {
             return CarBrandManager.GetListOfAllCarBrands();
         }
         
         [HttpGet]
-        public Car_Brands GetCarBrandSpecifiedById(int id)
+        public DataModels.CarBrandModel GetCarBrandSpecifiedById(int id)
         {
             return CarBrandManager.GetCarBrandById(id);
         }
 
         [HttpPost]
         [AuthorizationFilter]
-        public Response_String AddNewCarBrand([FromBody] Car_Brands CarBrandToBeAdded)
+        public HttpResponseMessage AddNewCarBrand([FromBody] DataModels.CarBrandModel CarBrandToBeAdded)
         {
-            var response = new Response_String();
-            response.Response = CarBrandManager.AddNewCarBrand(CarBrandToBeAdded);
-            return response;
+            return CarBrandManager.AddNewCarBrand(CarBrandToBeAdded);
         }
 
         [HttpPut]
         [AuthorizationFilter]
-        public Response_String ModifyExistingCarBrand([FromBody] Car_Brands CarBrandToBeModified)
+        public HttpResponseMessage ModifyExistingCarBrand([FromBody] DataModels.CarBrandModel CarBrandToBeModified)
         {
-            var response = new Response_String();
-            response.Response = CarBrandManager.ModifyCarBrand(CarBrandToBeModified);
-            return response;
+            return CarBrandManager.ModifyCarBrand(CarBrandToBeModified);
         }
 
         [HttpDelete]
         [AuthorizationFilter]
-        public Response_String DeleteExistingCarBrand(int carBrandId)
+        public HttpResponseMessage DeleteExistingCarBrand(int carBrandId)
         {
-            var response = new Response_String();
-            response.Response = CarBrandManager.DeleteCarBrandById(carBrandId);
-            return response;
+            return CarBrandManager.DeleteCarBrandById(carBrandId);
         }
     }
 }

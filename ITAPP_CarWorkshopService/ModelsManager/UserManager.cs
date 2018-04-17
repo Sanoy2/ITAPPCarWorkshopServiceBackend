@@ -4,6 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Threading;
 using ITAPP_CarWorkshopService.Authorization;
+using ITAPP_CarWorkshopService.DataModels;
+using System.Net.Http;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -11,76 +15,125 @@ namespace ITAPP_CarWorkshopService.ModelsManager
     {
         public static Mutex mutex = new Mutex();
 
-        public static User GetUser(int userId)
+        public static List<DataModels.UserModel> GetUser(int userId)
         {
             mutex.WaitOne();
 
             if (!CheckIfUserExistsPrivate(userId))
             {
                 mutex.ReleaseMutex();
-                throw NoUserOfGivenId(userId);
+                return null;
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            User user = db.Users.FirstOrDefault(n => n.User_ID == userId);
+            DataModels.UserModel user = new DataModels.UserModel(db.Users.FirstOrDefault(n => n.User_ID == userId));
             mutex.ReleaseMutex();
 
-            user.User_password = "******";
+            user.UserPassword = "******";
 
-            return user;
+            var list = new List<DataModels.UserModel>();
+            list.Add(user);
+
+            return list;
         }
 
-        public static string RegisterUser(User user)
+        public static HttpResponseMessage CheckIfNameValidPublic(string EmailAddress)
         {
-            user.User_email = UserEmailAdjustment(user.User_email);
-
-            if(CheckIfUserExistsPrivate(user.User_email))
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            if (db.Users.Any(n => n.User_email.ToLower() == EmailAddress.ToLower()))
             {
-                return "User of given email already exists.";
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                return response;
             }
+            else
+            {
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                return response;
+            }
+        }
+
+        public static bool RegisterUser(DataModels.UserModel UserModel)
+        {
+            UserModel.UserEmail = UserEmailAdjustment(UserModel.UserEmail);
+
+            var UserEntity = UserModel.MakeUserEntityFromUserModel();
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            db.Users.Add(user);
+            if (CheckIfUserExistsPrivate(UserModel.UserEmail))
+            {
+                mutex.ReleaseMutex();
+                return false;
+            }
+
+            db.Users.Add(UserEntity);
             db.SaveChanges();
+
             mutex.ReleaseMutex();
 
-            return "User was registered.";
+            return true;
         }
 
-        public static string Login(User user)
+        public static HttpResponseMessage Login(DataModels.UserModel user)
         {
-            user.User_email = UserEmailAdjustment(user.User_email);
+            user.UserEmail = UserEmailAdjustment(user.UserEmail);
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
             mutex.WaitOne();
-            if (!CheckIfUserExistsPrivate(user.User_email))
+            if (!CheckIfUserExistsPrivate(user.UserEmail))
             {
                 mutex.ReleaseMutex();
-                throw NoUserOfGivenEmail(user.User_email);
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("Account of given email address does not exists.");
+
+                return response;
             }
-    
-            if(TryToLogIn(user))
+
+            if (TryToLogIn(user))
             {
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                string TokenString = GenerateTokenForUser(user.UserEmail);
+                int userID = GetUserIdByUserEmailPrivate(user.UserEmail);
+                int clientID = -1;
+
+                if(db.Client_Profiles.Any(n => n.User_ID == userID))
+                {
+                    clientID = db.Client_Profiles.First(n => n.User_ID == userID).Client_ID;
+                }
+
                 mutex.ReleaseMutex();
-                return GenerateTokenForUser(user.User_email);
+
+                var ResponseContentAsModel = new ITAPP_CarWorkshopService.AdditionalModels.LoginResponse()
+                {
+                    Token = TokenString,
+                    UserID = userID,
+                    ClientID = clientID
+                };
+
+                var ResponseContentAsJSON = JsonConvert.SerializeObject(ResponseContentAsModel);
+                response.Content = new StringContent(ResponseContentAsJSON); 
+
+                return response; 
             }
             else
             {
                 mutex.ReleaseMutex();
-                throw WrongPassword(user.User_email);
+                var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+                response.Content = new StringContent("Wrong password");
+
+                return response;
             }
         }
 
-        private static bool TryToLogIn(User user)
+        private static bool TryToLogIn(DataModels.UserModel user)
         {
             bool result = false;
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
 
-            result = db.Users.Any(n => n.User_email == user.User_email && n.User_password == user.User_password);
+            result = db.Users.Any(n => n.User_email.Equals(user.UserEmail) && n.User_password.Equals(user.UserPassword));
 
             return result;
         }
@@ -173,7 +226,7 @@ namespace ITAPP_CarWorkshopService.ModelsManager
 
             userEmail = UserEmailAdjustment(userEmail);
 
-            return db.Users.Any(user => user.User_email == userEmail);
+            return db.Users.Any(user => user.User_email.ToLower().Equals(userEmail));
         }
 
         private static Exception NoUserOfGivenEmail(string email)

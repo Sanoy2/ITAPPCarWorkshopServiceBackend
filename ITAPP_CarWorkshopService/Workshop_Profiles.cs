@@ -22,6 +22,7 @@ namespace ITAPP_CarWorkshopService
             this.Workshop_Comments = new HashSet<Workshop_Comments>();
             this.Workshop_Employees = new HashSet<Workshop_Employees>();
             this.Workshop_Opening_Hours = new HashSet<Workshop_Opening_Hours>();
+            this.Reservations = new HashSet<Reservation>();
         }
     
         public int Workshop_ID { get; set; }
@@ -49,5 +50,7 @@ namespace ITAPP_CarWorkshopService
         public virtual ICollection<Workshop_Employees> Workshop_Employees { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Workshop_Opening_Hours> Workshop_Opening_Hours { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

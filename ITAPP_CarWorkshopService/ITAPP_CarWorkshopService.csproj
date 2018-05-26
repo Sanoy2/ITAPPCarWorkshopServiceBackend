@@ -233,6 +233,7 @@
     <Compile Include="DataModels\CarServiceModel.cs" />
     <Compile Include="DataModels\CarsFollowedModel.cs" />
     <Compile Include="DataModels\ClientProfile.cs" />
+    <Compile Include="DataModels\ReservationModel.cs" />
     <Compile Include="DataModels\UserModel.cs" />
     <Compile Include="DataModels\WorkshopBrandConnectionsModels.cs" />
     <Compile Include="DataModels\WorkshopProfileModel.cs" />
@@ -264,6 +265,9 @@
     <Compile Include="ModelsManager\WorkshopCommentManager.cs" />
     <Compile Include="ModelsManager\WorksopBrandConnectionMenager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reservation.cs">
+      <DependentUpon>Models.tt</DependentUpon>
+    </Compile>
     <Compile Include="ResonseClass\Response_Class.cs" />
     <Compile Include="StringAdjustment.cs" />
     <Compile Include="sysdiagram.cs">

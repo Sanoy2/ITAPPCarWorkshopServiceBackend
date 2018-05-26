@@ -53,6 +53,16 @@
           <Property Name="Client_phone_number" Type="varchar" MaxLength="12" />
           <Property Name="User_ID" Type="int" />
         </EntityType>
+        <EntityType Name="Reservations">
+          <Key>
+            <PropertyRef Name="ReservationId" />
+          </Key>
+          <Property Name="ReservationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ReservationDateTime" Type="datetime" Nullable="false" />
+          <Property Name="ReservationStatus" Type="varchar" MaxLength="255" />
+          <Property Name="Workshop_ID" Type="int" />
+          <Property Name="User_ID" Type="int" />
+        </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
             <PropertyRef Name="diagram_id" />
@@ -228,6 +238,30 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Reservati__User___2A164134">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="Reservations">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Reservati__Works__29221CFB">
+          <End Role="Workshop_Profiles" Type="Self.Workshop_Profiles" Multiplicity="0..1" />
+          <End Role="Reservations" Type="Self.Reservations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workshop_Profiles">
+              <PropertyRef Name="Workshop_ID" />
+            </Principal>
+            <Dependent Role="Reservations">
+              <PropertyRef Name="Workshop_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Workshop___Car_b__123EB7A3">
           <End Role="Car_Brands" Type="Self.Car_Brands" Multiplicity="0..1" />
           <End Role="Workshop_Brand_Connections" Type="Self.Workshop_Brand_Connections" Multiplicity="*" />
@@ -318,6 +352,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <EntitySet Name="Car_Services" EntityType="Self.Car_Services" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cars_followed" EntityType="Self.Cars_followed" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Client_Profiles" EntityType="Self.Client_Profiles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Reservations" EntityType="Self.Reservations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Workshop_Brand_Connections" EntityType="Self.Workshop_Brand_Connections" Schema="dbo" store:Type="Tables" />
@@ -358,6 +393,14 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <AssociationSet Name="FK__Client_Pr__User___208CD6FA" Association="Self.FK__Client_Pr__User___208CD6FA">
             <End Role="Users" EntitySet="Users" />
             <End Role="Client_Profiles" EntitySet="Client_Profiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Reservati__User___2A164134" Association="Self.FK__Reservati__User___2A164134">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Reservations" EntitySet="Reservations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Reservati__Works__29221CFB" Association="Self.FK__Reservati__Works__29221CFB">
+            <End Role="Workshop_Profiles" EntitySet="Workshop_Profiles" />
+            <End Role="Reservations" EntitySet="Reservations" />
           </AssociationSet>
           <AssociationSet Name="FK__Workshop___Car_b__123EB7A3" Association="Self.FK__Workshop___Car_b__123EB7A3">
             <End Role="Car_Brands" EntitySet="Car_Brands" />
@@ -461,6 +504,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <Property Name="User_password" Type="String" MaxLength="64" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Workshop_Employees" Relationship="Self.FK__Workshop___User___02084FDA" FromRole="Users" ToRole="Workshop_Employees" />
           <NavigationProperty Name="Client_Profiles" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" FromRole="User" ToRole="Client_Profiles" />
+          <NavigationProperty Name="Reservations" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Reservati__User___2A164134" FromRole="User" ToRole="Reservation" />
         </EntityType>
         <EntityType Name="Workshop_Brand_Connections">
           <Key>
@@ -540,6 +584,7 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <Property Name="Workshop_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Latitude" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Longtitude" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Reservations" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Reservati__Works__29221CFB" FromRole="Workshop_Profiles" ToRole="Reservation" />
         </EntityType>
         <EntityType Name="database_firewall_rules">
           <Key>
@@ -767,6 +812,15 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
             <End Role="Client_Profiles" EntitySet="Client_Profiles" />
           </AssociationSet>
           <EntitySet Name="sysdiagrams" EntityType="ITAPPCarWorkshopServiceDBModel.sysdiagram" />
+          <EntitySet Name="Reservations" EntityType="ITAPPCarWorkshopServiceDBModel.Reservation" />
+          <AssociationSet Name="FK__Reservati__User___2A164134" Association="ITAPPCarWorkshopServiceDBModel.FK__Reservati__User___2A164134">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Reservation" EntitySet="Reservations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Reservati__Works__29221CFB" Association="ITAPPCarWorkshopServiceDBModel.FK__Reservati__Works__29221CFB">
+            <End Role="Workshop_Profiles" EntitySet="Workshop_Profiles" />
+            <End Role="Reservation" EntitySet="Reservations" />
+          </AssociationSet>
         </EntityContainer>
         <Association Name="FK__Client_Pr__User___208CD6FA">
           <End Type="ITAPPCarWorkshopServiceDBModel.User" Role="User" Multiplicity="0..1" />
@@ -790,6 +844,42 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
+        <EntityType Name="Reservation">
+          <Key>
+            <PropertyRef Name="ReservationId" />
+          </Key>
+          <Property Name="ReservationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ReservationDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ReservationStatus" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Workshop_ID" Type="Int32" />
+          <Property Name="User_ID" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Reservati__User___2A164134" FromRole="Reservation" ToRole="User" />
+          <NavigationProperty Name="Workshop_Profiles" Relationship="ITAPPCarWorkshopServiceDBModel.FK__Reservati__Works__29221CFB" FromRole="Reservation" ToRole="Workshop_Profiles" />
+        </EntityType>
+        <Association Name="FK__Reservati__User___2A164134">
+          <End Type="ITAPPCarWorkshopServiceDBModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="ITAPPCarWorkshopServiceDBModel.Reservation" Role="Reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="User_ID" />
+            </Principal>
+            <Dependent Role="Reservation">
+              <PropertyRef Name="User_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Reservati__Works__29221CFB">
+          <End Type="ITAPPCarWorkshopServiceDBModel.Workshop_Profiles" Role="Workshop_Profiles" Multiplicity="0..1" />
+          <End Type="ITAPPCarWorkshopServiceDBModel.Reservation" Role="Reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workshop_Profiles">
+              <PropertyRef Name="Workshop_ID" />
+            </Principal>
+            <Dependent Role="Reservation">
+              <PropertyRef Name="Workshop_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -950,6 +1040,17 @@ warning 6002: The table/view 'ITAPPCarWorkshopServiceDB.sys.database_firewall_ru
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="principal_id" ColumnName="principal_id" />
                 <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Reservations">
+            <EntityTypeMapping TypeName="ITAPPCarWorkshopServiceDBModel.Reservation">
+              <MappingFragment StoreEntitySet="Reservations">
+                <ScalarProperty Name="User_ID" ColumnName="User_ID" />
+                <ScalarProperty Name="Workshop_ID" ColumnName="Workshop_ID" />
+                <ScalarProperty Name="ReservationStatus" ColumnName="ReservationStatus" />
+                <ScalarProperty Name="ReservationDateTime" ColumnName="ReservationDateTime" />
+                <ScalarProperty Name="ReservationId" ColumnName="ReservationId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

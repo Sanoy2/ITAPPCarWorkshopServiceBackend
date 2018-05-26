@@ -31,6 +31,9 @@
         <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Workshop___Works__151B244E" ManuallyRouted="false" />
         <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Client_Pr__User___208CD6FA" />
         <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.sysdiagram" Width="1.5" PointX="8.375" PointY="4.75" />
+        <EntityTypeShape EntityType="ITAPPCarWorkshopServiceDBModel.Reservation" Width="1.5" PointX="9" PointY="11.125" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Reservati__User___2A164134" />
+        <AssociationConnector Association="ITAPPCarWorkshopServiceDBModel.FK__Reservati__Works__29221CFB" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -38,5 +38,6 @@ namespace ITAPP_CarWorkshopService
         public virtual DbSet<Workshop_Profiles> Workshop_Profiles { get; set; }
         public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<Reservation> Reservations { get; set; }
     }
 }

@@ -29,6 +29,12 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarProflie
             return CarProfileManager.GetCarProfileById(ID);
         }
 
+        [HttpGet]
+        public DataModels.CarProfileModel GetCarByVIN(string VIN)
+        {
+            return CarProfileManager.GetCarByVIN(VIN);
+        }
+
         [HttpPost]
         public HttpResponseMessage AddCarProfileToDB([FromBody] DataModels.CarProfileModel NewCarProfileModel)
         {

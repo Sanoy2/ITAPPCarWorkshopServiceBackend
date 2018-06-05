@@ -5,6 +5,7 @@ using System.Web;
 using System.Threading;
 using System.Net.Http;
 using System.Net;
+using ITAPP_CarWorkshopService.DataModels;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -24,6 +25,20 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             var ListOfModels = DataModels.CarProfileModel.ListOfEntityToListOfModels(ListOfEntities);
 
             return ListOfModels;
+        }
+
+        public static DataModels.CarProfileModel GetCarByVIN(string VIN)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            mutex.WaitOne();
+
+            var carEntity = db.Car_Profiles.FirstOrDefault(n => n.Car_VIN_number.Equals(VIN));
+
+            mutex.ReleaseMutex();
+
+            var carModel = new CarProfileModel(carEntity);
+
+            return carModel;
         }
 
         public static List<DataModels.CarProfileModel> GetCarProfileById(int CarProfileId)

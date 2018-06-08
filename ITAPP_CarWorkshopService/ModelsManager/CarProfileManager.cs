@@ -41,6 +41,66 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             return carModel;
         }
 
+        public static List<DataModels.CarProfileModel> GetCarByProductionYearAndBrandID(int? productionYear, int? brandID)
+        {
+            if (productionYear == null && brandID == null)
+            {
+                return new List<DataModels.CarProfileModel>();
+            }
+
+            if (productionYear == null)
+            {
+                return GetCarProfilesByBrandID((int)brandID);
+            }
+
+            if (brandID == null)
+            {
+                return GetCarProfilesByProductionYear((int)productionYear);
+            }
+
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+            mutex.WaitOne();
+
+            var ListOfEntities = db.Car_Profiles
+                    .Where(n => n.Car_production_year == productionYear && n.Brand_ID == brandID).ToList();
+
+            mutex.ReleaseMutex();
+
+            var ListOfModels = DataModels.CarProfileModel.ListOfEntityToListOfModels(ListOfEntities);
+
+            return ListOfModels;
+        }
+
+        private static List<DataModels.CarProfileModel> GetCarProfilesByBrandID(int brandID)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+
+            var ListOfEntities = db.Car_Profiles.Where(n => n.Brand_ID == brandID).ToList();
+
+            mutex.ReleaseMutex();
+
+            var ListOfModels = DataModels.CarProfileModel.ListOfEntityToListOfModels(ListOfEntities);
+
+            return ListOfModels;
+        }
+
+        private static List<DataModels.CarProfileModel> GetCarProfilesByProductionYear(int productionYear)
+        {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
+            mutex.WaitOne();
+
+            var ListOfEntities = db.Car_Profiles.Where(n => n.Car_production_year == productionYear).ToList();
+
+            mutex.ReleaseMutex();
+
+            var ListOfModels = DataModels.CarProfileModel.ListOfEntityToListOfModels(ListOfEntities);
+
+            return ListOfModels;
+        }
+
         public static List<DataModels.CarProfileModel> GetCarProfileById(int CarProfileId)
         {
             var db = new ITAPPCarWorkshopServiceDBEntities();

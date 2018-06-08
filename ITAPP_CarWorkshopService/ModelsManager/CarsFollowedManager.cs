@@ -6,6 +6,7 @@ using ITAPP_CarWorkshopService.DataModels;
 using System.Threading;
 using System.Net.Http;
 using System.Net;
+using System.Text;
 
 namespace ITAPP_CarWorkshopService.ModelsManager
 {
@@ -79,8 +80,14 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            ITAPP_CarWorkshopService.Cars_followed newCarFollowEntity;
-            newCarFollowEntity = newCarFollowModel.MakeCarsFollowedEntityFromCarsFollowedModel();
+            //ITAPP_CarWorkshopService.Cars_followed newCarFollowEntity;
+            //var newCarFollowEntity = newCarFollowModel.MakeCarsFollowedEntityFromCarsFollowedModel();
+            var newCarFollowEntity = new ITAPP_CarWorkshopService.Cars_followed()
+            {
+                Car_follow_ID = newCarFollowModel.CarFollowID,
+                Car_profile_ID = newCarFollowModel.CarProfileID,
+                Client_ID = newCarFollowModel.ClientProfileID
+            };
 
             try
             {
@@ -99,7 +106,15 @@ namespace ITAPP_CarWorkshopService.ModelsManager
                 mutex.ReleaseMutex();
 
                 var response = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-                response.Content = new StringContent("Something gone wrong while adding follow to DB.");
+                var builder = new StringBuilder();
+                builder.AppendLine("Something gone wrong while adding follow to DB.");
+                builder.AppendLine(e.Message);
+                builder.AppendLine(e.Data.ToString());
+                builder.AppendLine(e.InnerException.ToString());
+                builder.AppendLine(e.HelpLink);
+                builder.AppendLine(e.Source);
+                builder.AppendLine(e.StackTrace);
+                response.Content = new StringContent(builder.ToString());
 
                 return response;
             }

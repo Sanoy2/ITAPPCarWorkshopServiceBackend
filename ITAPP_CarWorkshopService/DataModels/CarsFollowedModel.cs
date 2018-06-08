@@ -25,19 +25,27 @@ namespace ITAPP_CarWorkshopService.DataModels
 
         public void MakeCarsFollowedModelFromCarsFollowedEntity(ITAPP_CarWorkshopService.Cars_followed CarsFollowedEntity)
         {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
+
             CarFollowID = CarsFollowedEntity.Car_follow_ID;
             CarProfileID = (int)CarsFollowedEntity.Car_profile_ID;
-            ClientProfileID = (int)CarsFollowedEntity.Client_ID;
+            ClientProfileID = (int)db.Client_Profiles.First(n => n.Client_ID == CarsFollowedEntity.Client_ID).User_ID;
         }
 
         public ITAPP_CarWorkshopService.Cars_followed MakeCarsFollowedEntityFromCarsFollowedModel()
         {
+            var db = new ITAPPCarWorkshopServiceDBEntities();
             var CarsFollowedEntity = new ITAPP_CarWorkshopService.Cars_followed()
             {
                 Car_follow_ID = CarFollowID,
                 Car_profile_ID = CarProfileID,
-                Client_ID = ClientProfileID
+                //Client_ID = ClientProfileID // tu musi być id profilu klienta, nie usera
             };
+
+            int userId = 0;
+            userId = db.Client_Profiles.First(n => n.User_ID == ClientProfileID).Client_ID;
+
+            CarsFollowedEntity.Client_ID = userId;
 
             return CarsFollowedEntity;
         }

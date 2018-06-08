@@ -35,6 +35,12 @@ namespace ITAPP_CarWorkshopService.Controllers.Car.CarProflie
             return CarProfileManager.GetCarByVIN(VIN);
         }
 
+        [HttpGet]
+        public List<DataModels.CarProfileModel> GetWorkshopsByNameAndCity([FromUri] int? productionYear, [FromUri] int? brandID)
+        {
+            return CarProfileManager.GetCarByProductionYearAndBrandID(productionYear, brandID);
+        }
+
         [HttpPost]
         public HttpResponseMessage AddCarProfileToDB([FromBody] DataModels.CarProfileModel NewCarProfileModel)
         {

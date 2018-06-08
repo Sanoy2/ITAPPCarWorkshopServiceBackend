@@ -80,14 +80,9 @@ namespace ITAPP_CarWorkshopService.ModelsManager
             }
 
             var db = new ITAPPCarWorkshopServiceDBEntities();
-            //ITAPP_CarWorkshopService.Cars_followed newCarFollowEntity;
-            //var newCarFollowEntity = newCarFollowModel.MakeCarsFollowedEntityFromCarsFollowedModel();
-            var newCarFollowEntity = new ITAPP_CarWorkshopService.Cars_followed()
-            {
-                Car_follow_ID = newCarFollowModel.CarFollowID,
-                Car_profile_ID = newCarFollowModel.CarProfileID,
-                Client_ID = newCarFollowModel.ClientProfileID
-            };
+            ITAPP_CarWorkshopService.Cars_followed newCarFollowEntity;
+            newCarFollowEntity = newCarFollowModel.MakeCarsFollowedEntityFromCarsFollowedModel();
+
 
             try
             {
